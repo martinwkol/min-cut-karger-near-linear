@@ -4,6 +4,7 @@
 #include "types.hpp"
 #include "edge.hpp"
 
+class MultiGraph;
 
 class WeightedGraph {
 private:
@@ -16,6 +17,11 @@ public:
 
     size_t numVertices() const { return mNumVertices; }
     const std::vector<WeightedEdge>& edges() const { return mEdges; }
+
+    EdgeWeight minEdgeWeight() const;
+    EdgeWeight maxEdgeWeight() const;
+
+    MultiGraph approxAsMultiGraph(float epsilon) const;
 };
 
 
