@@ -1,6 +1,7 @@
 #include "graph.hpp"
 
 #include <algorithm>
+#include <numeric>
 #include <cmath>
 #include "binom.hpp"
 
@@ -46,6 +47,12 @@ MultiGraph::MultiGraph(size_t numVertices, const MultiEdge* edges, size_t numEdg
 MultiGraph::MultiGraph(size_t numVertices, std::vector<MultiEdge>&& edges)
     : mNumVertices(numVertices), mEdges(std::move(edges))
 {
+}
+
+size_t MultiGraph::numSimpleEdges() const {
+    return std::accumulate(mEdges.begin(), mEdges.end(), size_t(0), [](size_t m, const MultiEdge& edge) {
+        return m + edge.multiplicity();
+    });
 }
 
 void MultiGraph::sampleEdges(double sampleProbability, EdgeMultiplicity maxEdgeMultiplicity) {
