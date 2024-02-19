@@ -1,5 +1,9 @@
 #pragma once
 
+typedef unsigned int uint;
+typedef unsigned long long ull;
+
+
 typedef unsigned int VertexID;
 typedef double EdgeWeight;
-typedef unsigned long long EdgeMultiplicity;
+typedef ull EdgeMultiplicity;
