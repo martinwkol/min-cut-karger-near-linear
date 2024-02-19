@@ -7,9 +7,12 @@
 #include "union_find.hpp"
 
 template <bool MAX_SPANNING_TREE, bool USE_WEIGHTS>
-static std::vector<size_t> spanningTree(const MultiGraph& graph, const EdgeWeight* weights, size_t numWeights) {
+static bool spanningTree(size_t* edgeIndices, size_t edgeIndicesSize, const MultiGraph& graph, const EdgeWeight* weights, size_t numWeights) {
     if (graph.numVertices() <= 1) {
-        return std::vector<size_t>();
+        return true;
+    }
+    if (edgeIndicesSize < graph.numVertices() - 1) {
+        throw std::runtime_error("edgeIndices too small");
     }
 
     const std::vector<MultiEdge>& edges = graph.edges();
@@ -47,37 +50,37 @@ static std::vector<size_t> spanningTree(const MultiGraph& graph, const EdgeWeigh
     }
 
     UnionFind uf(graph.numVertices());
-    std::vector<size_t> selectedIndices;
-    selectedIndices.reserve(graph.numVertices() - 1);
+    size_t numSelectedEdges = 0;
     for (size_t index : sortedIndices) {
         const MultiEdge& edge = edges[index];
 
         if (uf.find(edge.endpoint(0)) != uf.find(edge.endpoint(1))) {
-            selectedIndices.push_back(index);
-            uf.unionSets(edge.endpoint(0), edge.endpoint(1));
+            *edgeIndices++ = index;
+            numSelectedEdges++;
 
-            if (selectedIndices.size() == graph.numVertices() - 1) {
-                return selectedIndices;
+            if (numSelectedEdges == graph.numVertices() - 1) {
+                return true;
             }
 
+            uf.unionSets(edge.endpoint(0), edge.endpoint(1));
         }
     }
 
-    throw std::runtime_error("the graph is not connected");
+    throw false;
 } 
 
-std::vector<size_t> minSpanningTree(const MultiGraph& graph) {
-    return spanningTree<false, false>(graph, nullptr, 0);
+bool minSpanningTree(size_t* edgeIndices, size_t edgeIndicesSize, const MultiGraph& graph) {
+    return spanningTree<false, false>(edgeIndices, edgeIndicesSize, graph, nullptr, 0);
 }
 
-std::vector<size_t> minSpanningTree(const MultiGraph& graph, const EdgeWeight* weights, size_t numWeights) {
-    return spanningTree<false, true>(graph, weights, numWeights);
+bool minSpanningTree(size_t* edgeIndices, size_t edgeIndicesSize, const MultiGraph& graph, const EdgeWeight* weights, size_t numWeights) {
+    return spanningTree<false, true>(edgeIndices, edgeIndicesSize, graph, weights, numWeights);
 }
 
-std::vector<size_t> maxSpanningTree(const MultiGraph& graph) {
-    return spanningTree<true, false>(graph, nullptr, 0);
+bool maxSpanningTree(size_t* edgeIndices, size_t edgeIndicesSize, const MultiGraph& graph) {
+    return spanningTree<true, false>(edgeIndices, edgeIndicesSize, graph, nullptr, 0);
 }
 
-std::vector<size_t> maxSpanningTree(const MultiGraph& graph, const EdgeWeight* weights, size_t numWeights) {
-    return spanningTree<true, true>(graph, weights, numWeights);
+bool maxSpanningTree(size_t* edgeIndices, size_t edgeIndicesSize, const MultiGraph& graph, const EdgeWeight* weights, size_t numWeights) {
+    return spanningTree<true, true>(edgeIndices, edgeIndicesSize, graph, weights, numWeights);
 }
