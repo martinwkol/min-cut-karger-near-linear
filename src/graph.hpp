@@ -21,7 +21,7 @@ public:
     EdgeWeight minEdgeWeight() const;
     EdgeWeight maxEdgeWeight() const;
 
-    MultiGraph approxAsMultiGraph(float epsilon) const;
+    MultiGraph approxAsMultiGraph(double epsilon) const;
 };
 
 

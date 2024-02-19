@@ -27,7 +27,7 @@ EdgeWeight WeightedGraph::maxEdgeWeight() const {
     })->weight();
 }
 
-MultiGraph WeightedGraph::approxAsMultiGraph(float epsilon) const {
+MultiGraph WeightedGraph::approxAsMultiGraph(double epsilon) const {
     std::vector<MultiEdge> multiedges;
     multiedges.reserve(mEdges.size());
 
