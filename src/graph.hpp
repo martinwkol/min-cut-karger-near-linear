@@ -36,4 +36,9 @@ public:
 
     size_t numVertices() const { return mNumVertices; }
     const std::vector<MultiEdge>& edges() const { return mEdges; }
+
+    /**
+     * Sample each edge with probability sampleProbability and cap the edge-multiplicities to maxEdgeMultiplicity
+    */
+    void sampleEdges(double sampleProbability, EdgeMultiplicity maxEdgeMultiplicity);
 };

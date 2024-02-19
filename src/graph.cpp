@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include "binom.hpp"
 
 WeightedGraph::WeightedGraph(size_t numVertices, const WeightedEdge* edges, size_t numEdges)
     : mNumVertices(numVertices), mEdges(edges, edges + numEdges)
@@ -33,7 +34,7 @@ MultiGraph WeightedGraph::approxAsMultiGraph(float epsilon) const {
     for (const WeightedEdge& edge : mEdges) {
         multiedges.emplace_back(edge.endpoint(0), edge.endpoint(1), std::ceil(edge.weight() * multiplicator));
     }
-    
+
     return MultiGraph(mNumVertices, std::move(multiedges));    
 }
 
@@ -45,4 +46,10 @@ MultiGraph::MultiGraph(size_t numVertices, const MultiEdge* edges, size_t numEdg
 MultiGraph::MultiGraph(size_t numVertices, std::vector<MultiEdge>&& edges)
     : mNumVertices(numVertices), mEdges(std::move(edges))
 {
+}
+
+void MultiGraph::sampleEdges(double sampleProbability, EdgeMultiplicity maxEdgeMultiplicity) {
+    for (MultiEdge& edge : mEdges) {
+        edge.setMultiplicity(binom(edge.multiplicity(), sampleProbability, maxEdgeMultiplicity));
+    }
 }
