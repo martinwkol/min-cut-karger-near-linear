@@ -10,7 +10,6 @@ private:
     const MultiGraph& mGraph;
     std::vector<EdgeSelection> mTrees;
     double mTreeWeight;
-    double mPackingWeight;
     double mEpsilon;
 
 public:
@@ -22,6 +21,6 @@ public:
     const MultiGraph& graph() const { return mGraph; }
     const std::vector<EdgeSelection>& trees() const { return mTrees; }
     double treeWeight() const { return mTreeWeight; }
-    double packingWeight() const { return mPackingWeight; }
+    double packingWeight() const { return mTreeWeight * mTrees.size(); }
     double epsilon() const { return mEpsilon; }
 };
