@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <numeric>
 #include <cmath>
-#include "binom.hpp"
+#include "random.hpp"
 
 WeightedGraph::WeightedGraph(size_t numVertices, const WeightedEdge* edges, size_t numEdges)
     : mNumVertices(numVertices), mEdges(edges, edges + numEdges)

@@ -1,9 +1,8 @@
-#include "binom.hpp"
+#include "random.hpp"
 
-#include <random>
 #include <ctime>
 
-static std::default_random_engine randomGenerator(time(0));
+std::default_random_engine randomGenerator(time(0));
 
 ull binom(ull trials, double prob, ull ciel) {
     // use inverse transform sampling
