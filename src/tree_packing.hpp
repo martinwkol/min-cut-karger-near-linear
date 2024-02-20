@@ -23,4 +23,9 @@ public:
     double treeWeight() const { return mTreeWeight; }
     double packingWeight() const { return mTreeWeight * mTrees.size(); }
     double epsilon() const { return mEpsilon; }
+
+    /**
+     * Reduce size of packing to targetSize by randomly sampling trees
+    */
+    void sampleTrees(size_t targetSize);
 };

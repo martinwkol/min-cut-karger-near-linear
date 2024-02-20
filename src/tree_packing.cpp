@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include "spanning_tree.hpp"
+#include "random.hpp"
 
 TreePacking::TreePacking(const MultiGraph& graph, double epsilon) : mGraph(graph) {
     mEpsilon = epsilon;
@@ -28,4 +29,14 @@ TreePacking::TreePacking(const MultiGraph& graph, double epsilon) : mGraph(graph
         }
         mTrees.push_back(std::move(selection));
     }
+}
+
+void TreePacking::sampleTrees(size_t targetSize) {
+    if (targetSize >= mTrees.size()) return;
+    for (size_t i = 0; i < targetSize; i++) {
+        std::uniform_int_distribution uid(i, mTrees.size() - 1);
+        size_t index = uid(randomGenerator);
+        std::swap(mTrees[i], mTrees[index]);
+    }
+    mTrees.resize(targetSize);
 }
