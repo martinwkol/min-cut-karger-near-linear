@@ -20,6 +20,11 @@ private:
     std::vector<std::vector<AdjacentVertex>> mChildren;
     std::vector<size_t> mSubtreeSize;
 
+    std::vector<size_t> mHeavyPathStart;
+
+    void initParentsChildren();
+    void heavyLightDecomposition();
+
 public:
     RootedSpanningTree(const WeightedGraph& graph, const EdgeSelection& edgeSelection, VertexID root);
 
