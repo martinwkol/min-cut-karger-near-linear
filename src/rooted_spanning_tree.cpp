@@ -1,6 +1,8 @@
 #include "rooted_spanning_tree.hpp"
 
 #include <stack>
+#include <algorithm>
+#include <cmath>
 
 void RootedSpanningTree::initParentsChildren() {
     mParents.resize(mGraph.numVertices(), NO_PARENT);
@@ -129,17 +131,19 @@ void RootedSpanningTree::heavyLightDecomposition() {
     mEdgeSelection = std::move(orderedEdgeSelection);
 }
 
-RootedSpanningTree::Interval* RootedSpanningTree::findVertex2RootSubsequences(Interval* buffer, Interval* bufferEnd, VertexID vertex) const {
+std::vector<RootedSpanningTree::Interval> RootedSpanningTree::findVertex2RootSubsequences(VertexID vertex) const {
+    std::vector<Interval> subseq;
+    subseq.reserve(2 * size_t(ceil(log2(mGraph.numVertices()))) + 2);
     while (vertex != mRoot) {
-        if (buffer == bufferEnd) return nullptr;
-        buffer->end = mParents[vertex].edgeIndex;
-        buffer->start = mHeavyPathStart[buffer->end];
+        Interval interval;
+        interval.end = mParents[vertex].edgeIndex;
+        interval.start = mHeavyPathStart[interval.end];
 
-        const WeightedEdge& edge = mGraph.edges()[buffer->start];
+        const WeightedEdge& edge = mGraph.edges()[interval.start];
         vertex = edge.endpoint(0) ? mParents[edge.endpoint(1)].vertex == edge.endpoint(0) : edge.endpoint(1);
-        buffer++;
+        subseq.push_back(interval);
     }
-    return buffer;
+    return subseq;
 }
 
 RootedSpanningTree::RootedSpanningTree(const WeightedGraph& graph, const EdgeSelection& edgeSelection, VertexID root) 
@@ -149,13 +153,9 @@ RootedSpanningTree::RootedSpanningTree(const WeightedGraph& graph, const EdgeSel
     heavyLightDecomposition();
 }
 
-RootedSpanningTree::Interval* RootedSpanningTree::findVertex2VertexSubsequences(Interval* intervals, size_t intervalsSize, VertexID vertex1, VertexID vertex2) const {
-    size_t maxNumIntervals2Root = size_t(ceil(log2(mGraph.numVertices()))) + 2;
-    std::vector<Interval> v1Intervals(maxNumIntervals2Root);
-    std::vector<Interval> v2Intervals(maxNumIntervals2Root);
-    
-    findVertex2RootSubsequences(v1Intervals.data(), v1Intervals.data() + v1Intervals.size(), vertex1);
-    findVertex2RootSubsequences(v2Intervals.data(), v2Intervals.data() + v2Intervals.size(), vertex1);
+std::vector<RootedSpanningTree::Interval> RootedSpanningTree::findVertex2VertexSubsequences(VertexID vertex1, VertexID vertex2) const {
+    std::vector<Interval> v1Intervals = findVertex2RootSubsequences(vertex1);
+    std::vector<Interval> v2Intervals = findVertex2RootSubsequences(vertex2);
 
     while (!v1Intervals.empty() && !v2Intervals.empty() && v1Intervals.back().start == v2Intervals.back().start && v1Intervals.back().end == v2Intervals.back().end) {
         v1Intervals.pop_back();
@@ -170,14 +170,7 @@ RootedSpanningTree::Interval* RootedSpanningTree::findVertex2VertexSubsequences(
         v2Intervals.pop_back();
     }
 
-    if (v1Intervals.size() + v2Intervals.size() > intervalsSize) return nullptr;
-
     std::reverse(v2Intervals.begin(), v2Intervals.end());
-
-    Interval* v1IntStart = intervals;
-    Interval* v2IntStart = intervals + v1Intervals.size();  
-    std::memcpy(v1IntStart, v1Intervals.data(), v1Intervals.size() * sizeof(Interval));
-    std::memcpy(v2IntStart, v2Intervals.data(), v2Intervals.size() * sizeof(Interval));
-    
-    return v2IntStart + v2Intervals.size();
+    v1Intervals.insert(v1Intervals.end(), v2Intervals.begin(), v2Intervals.end());
+    return v1Intervals;
 }

@@ -32,7 +32,7 @@ private:
     void initParentsChildren();
     void heavyLightDecomposition();
 
-    Interval* findVertex2RootSubsequences(Interval* buffer, Interval* bufferEnd, VertexID vertex) const;
+    std::vector<Interval> findVertex2RootSubsequences(VertexID vertex) const;
 
 public:
     RootedSpanningTree(const WeightedGraph& graph, const EdgeSelection& edgeSelection, VertexID root);
@@ -43,5 +43,5 @@ public:
     const std::vector<AdjacentVertex>& parents() const { return mParents; }
     const std::vector<std::vector<AdjacentVertex>>& children() const { return mChildren; }
 
-    Interval* findVertex2VertexSubsequences(Interval* intervals, size_t intervalsSize, VertexID vertex1, VertexID vertex2) const;
+    std::vector<Interval> findVertex2VertexSubsequences(VertexID vertex1, VertexID vertex2) const;
 };
