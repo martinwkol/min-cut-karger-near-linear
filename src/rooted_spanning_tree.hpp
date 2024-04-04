@@ -40,8 +40,8 @@ public:
     const WeightedGraph& graph() const { return mGraph; }
     const EdgeSelection& edgeSelection() const { return mEdgeSelection; }
     VertexID root() const { return mRoot; }
-    const std::vector<AdjacentVertex>& parents() const { return mParents; }
-    const std::vector<std::vector<AdjacentVertex>>& children() const { return mChildren; }
+    const AdjacentVertex& parent(VertexID vertex) const { return mParents[vertex]; }
+    const std::vector<AdjacentVertex>& children(VertexID vertex) const { return mChildren[vertex]; }
 
     std::vector<Interval> findVertex2VertexSubsequences(VertexID vertex1, VertexID vertex2) const;
 };
