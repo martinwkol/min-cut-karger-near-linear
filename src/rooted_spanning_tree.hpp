@@ -10,6 +10,11 @@ public:
         VertexID vertex;
     };
 
+    struct Interval {
+        size_t start;
+        size_t end;
+    };
+
 private:
     typedef std::vector<size_t> EdgeSelection;    
 
@@ -22,8 +27,12 @@ private:
 
     std::vector<size_t> mHeavyPathStart;
 
+    constexpr static AdjacentVertex NO_PARENT = { size_t(-1), VertexID(-1) };
+
     void initParentsChildren();
     void heavyLightDecomposition();
+
+    Interval* findVertex2RootSubsequences(Interval* buffer, Interval* bufferEnd, VertexID vertex) const;
 
 public:
     RootedSpanningTree(const WeightedGraph& graph, const EdgeSelection& edgeSelection, VertexID root);
@@ -33,4 +42,6 @@ public:
     VertexID root() const { return mRoot; }
     const std::vector<AdjacentVertex>& parents() const { return mParents; }
     const std::vector<std::vector<AdjacentVertex>>& children() const { return mChildren; }
+
+    Interval* findVertex2VertexSubsequences(Interval* intervals, size_t intervalsSize, VertexID vertex1, VertexID vertex2) const;
 };
