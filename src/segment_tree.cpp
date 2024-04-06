@@ -32,7 +32,6 @@ void SegmentTree::updateLazy(size_t valuesIndex, size_t left, size_t right) {
 
 void SegmentTree::addToIntervalRecursive(DataType value2add, size_t intervalStart, size_t intervalEnd, size_t left, size_t right, size_t valuesIndex) {    
     DataType& value = mValues[valuesIndex];
-    DataType& lazy = mLazy[valuesIndex];
     size_t indexLeftChild = valuesIndex * 2;
     size_t indexRightChild = valuesIndex * 2 + 1;
     
@@ -66,7 +65,7 @@ SegmentTree::SegmentTree(const DataType* list, size_t listSize) : mListSize(list
     initTree(list, 0, listSize - 1, 0);
 }
 
-size_t SegmentTree::minimumValueIndex() {
+size_t SegmentTree::minIndex() {
     size_t left = 0;
     size_t right = mListSize - 1;
     size_t valuesIndex = 0;
@@ -91,6 +90,6 @@ size_t SegmentTree::minimumValueIndex() {
     return left;
 }
 
-void SegmentTree::addToInterval(DataType value, size_t intervalStart, size_t intervalEnd) {
+void SegmentTree::intervalAdd(DataType value, size_t intervalStart, size_t intervalEnd) {
     addToIntervalRecursive(value, intervalStart, intervalEnd, 0, mListSize - 1, 0);
 }

@@ -21,8 +21,8 @@ public:
     SegmentTree(const DataType* list, size_t listSize);
 
     size_t listSize() const { return mListSize; }
-    DataType minimumValue() const { return mValues[0]; }
-    size_t minimumValueIndex();
+    DataType minValue() const { return mValues[0]; }
+    size_t minIndex();
 
-    void addToInterval(DataType value, size_t intervalStart, size_t intervalEnd);
+    void intervalAdd(DataType value, size_t intervalStart, size_t intervalEnd);
 };
