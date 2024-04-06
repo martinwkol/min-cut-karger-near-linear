@@ -16,6 +16,7 @@ public:
     WeightedGraph(size_t numVertices, std::vector<WeightedEdge>&& edges);
 
     size_t numVertices() const { return mNumVertices; }
+    size_t numEdges() const { return mEdges.size(); }
     const WeightedEdge& edge(size_t index) const { return mEdges[index]; }
     const std::vector<WeightedEdge>& edges() const { return mEdges; }
 
@@ -36,6 +37,7 @@ public:
     MultiGraph(size_t numVertices, std::vector<MultiEdge>&& edges);
 
     size_t numVertices() const { return mNumVertices; }
+    size_t numEdges() const { return mEdges.size(); }
     const MultiEdge& edge(size_t index) const { return mEdges[index]; }
     const std::vector<MultiEdge>& edges() const { return mEdges; }
 

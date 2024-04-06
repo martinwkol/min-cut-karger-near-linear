@@ -40,6 +40,8 @@ public:
     const WeightedGraph& graph() const { return mGraph; }
     const EdgeSelection& edgeSelection() const { return mEdgeSelection; }
     VertexID root() const { return mRoot; }
+    size_t numVertices() const { return mGraph.numVertices(); }
+    size_t numEdges() const { return mEdgeSelection.size(); }
     const AdjacentVertex& parent(VertexID vertex) const { return mParents[vertex]; }
     const std::vector<AdjacentVertex>& children(VertexID vertex) const { return mChildren[vertex]; }
     size_t originalEdgeIndex(size_t spanningTreeEdgeIndex) const { return mEdgeSelection[spanningTreeEdgeIndex]; }
