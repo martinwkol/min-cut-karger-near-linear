@@ -10,10 +10,10 @@ void RootedSpanningTree::initParentsChildren() {
     mSubtreeSize.resize(mGraph.numVertices(), 1);
 
     std::vector<std::vector<AdjacentVertex>> adjacent(mGraph.numVertices());
-    for (size_t edgeIndex : mEdgeSelection) {
-        const WeightedEdge& edge = mGraph.edges()[edgeIndex];
-        adjacent[edge.endpoint(0)].push_back({ edgeIndex, edge.endpoint(1) });
-        adjacent[edge.endpoint(1)].push_back({ edgeIndex, edge.endpoint(0) });
+    for (size_t i = 0; i < mEdgeSelection.size(); i++) {
+        const WeightedEdge& edge = mGraph.edges()[mEdgeSelection[i]];
+        adjacent[edge.endpoint(0)].push_back({ i, edge.endpoint(1) });
+        adjacent[edge.endpoint(1)].push_back({ i, edge.endpoint(0) });
     }
 
     // artificial stack to avoid stack overflow
@@ -64,7 +64,7 @@ void RootedSpanningTree::heavyLightDecomposition() {
 
     std::stack<Parameters, std::deque<Parameters>> stack;
     stack.push({ mRoot, 0, HEAVY_CHILD_NOT_SEARCHED });
-    size_t currentHeavyPathStart = mChildren[mRoot].front().edgeIndex;
+    size_t currentHeavyPathStart = 0;
     while (!stack.empty()) {
         Parameters& p = stack.top();
 
@@ -73,7 +73,7 @@ void RootedSpanningTree::heavyLightDecomposition() {
             continue;
         }
 
-        const std::vector<AdjacentVertex>& children = mChildren[p.vertex];
+        std::vector<AdjacentVertex>& children = mChildren[p.vertex];
         if (p.heavyChildIndex == HEAVY_CHILD_NOT_SEARCHED) {
             // This is the case if this vertex is visited for the first time
             // Since we have to visit the heavy child first (if it exists),
@@ -89,9 +89,11 @@ void RootedSpanningTree::heavyLightDecomposition() {
 
             if (p.heavyChildIndex != HEAVY_CHILD_NOT_SEARCHED) {
                 // Heavy child found
-                const AdjacentVertex& heavyChild = children[p.heavyChildIndex];
+                AdjacentVertex& heavyChild = children[p.heavyChildIndex];
                 // New heavy path starts here
-                currentHeavyPathStart = heavyChild.edgeIndex;
+                heavyChild.edgeIndex = orderedEdgeSelection.size();
+                mParents[p.heavyChildIndex].edgeIndex = orderedEdgeSelection.size();
+                currentHeavyPathStart = orderedEdgeSelection.size();
                 mHeavyPathStart[heavyChild.vertex] = currentHeavyPathStart;
                 // Visit heavy child first
                 orderedEdgeSelection.push_back(heavyChild.edgeIndex);
@@ -114,7 +116,9 @@ void RootedSpanningTree::heavyLightDecomposition() {
         }
 
         // Visit child
-        const AdjacentVertex& child = children[p.childIndex++];
+        AdjacentVertex& child = children[p.childIndex];
+        child.edgeIndex = orderedEdgeSelection.size();
+        mParents[p.childIndex].edgeIndex = orderedEdgeSelection.size();
         mHeavyPathStart[child.vertex] = currentHeavyPathStart;
         orderedEdgeSelection.push_back(child.edgeIndex);
 
