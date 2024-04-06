@@ -13,6 +13,7 @@ private:
     std::vector<DataType> mLazy;
 
     void initTree(const DataType* list, size_t left, size_t right, size_t valuesIndex);
+    void updateLazy(size_t valuesIndex, size_t left, size_t right);
     void addToIntervalRecursive(DataType value2add, size_t intervalStart, size_t intervalEnd, size_t left, size_t right, size_t valuesIndex);
 
 public:
