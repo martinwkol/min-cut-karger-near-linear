@@ -42,6 +42,8 @@ public:
     VertexID root() const { return mRoot; }
     const AdjacentVertex& parent(VertexID vertex) const { return mParents[vertex]; }
     const std::vector<AdjacentVertex>& children(VertexID vertex) const { return mChildren[vertex]; }
+    size_t originalEdgeIndex(size_t spanningTreeEdgeIndex) const { return mEdgeSelection[spanningTreeEdgeIndex]; }
+    const WeightedEdge& edge(size_t spanningTreeEdgeIndex) const { return mGraph.edge(originalEdgeIndex(spanningTreeEdgeIndex)); }
 
     std::vector<Interval> findVertex2VertexSubsequences(VertexID vertex1, VertexID vertex2) const;
 };
