@@ -22,7 +22,7 @@ public:
 
     size_t listSize() const { return mListSize; }
     DataType minimumValue() const { return mValues[0]; }
-    size_t minimumValueIndex() const;
+    size_t minimumValueIndex();
 
     void addToInterval(DataType value, size_t intervalStart, size_t intervalEnd);
 };
