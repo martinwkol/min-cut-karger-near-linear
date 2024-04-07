@@ -178,3 +178,39 @@ std::vector<RootedSpanningTree::Interval> RootedSpanningTree::findVertex2VertexS
     v1Intervals.insert(v1Intervals.end(), v2Intervals.begin(), v2Intervals.end());
     return v1Intervals;
 }
+
+std::vector<VertexID> RootedSpanningTree::cutFromCrossingEdges(const std::vector<size_t>& crossingEdgeIndices, bool containsRoot) const {
+    std::vector<bool> isCoossingEdge(numEdges(), false);
+    for (size_t crossingEdgeIndex : crossingEdgeIndices) {
+        isCoossingEdge[crossingEdgeIndex] = true;
+    }
+
+    std::vector<VertexID> cut;
+
+    // artificial stack to avoid stack overflow
+    struct Parameters {
+        VertexID vertex;
+        size_t childIndex;
+        bool inCut;
+    };
+    
+    std::stack<Parameters, std::deque<Parameters>> stack;
+    stack.push({ mRoot, 0, containsRoot });
+    while (!stack.empty()) {
+        Parameters& p = stack.top();
+        if (p.childIndex == 0 && p.inCut) {
+            cut.push_back(p.vertex);
+        }
+
+        const auto& children = mChildren[p.vertex];
+        if (p.childIndex == children.size()) {
+            stack.pop();
+            continue;
+        }
+
+        const AdjacentVertex& child = children[p.childIndex];
+        stack.push({ child.vertex, 0, !p.inCut ? isCoossingEdge[child.edgeIndex] : p.inCut });
+    }
+
+    return cut;
+}
