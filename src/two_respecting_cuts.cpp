@@ -74,7 +74,7 @@ static std::tuple<EdgeWeight, size_t, size_t> findSmallestStrictly2RespectingCut
     return { minWeight, rstCrossingEdgeIndex1, rstCrossingEdgeIndex2 };
 }
 
-std::vector<size_t> findSmallest2RespectingCut(const RootedSpanningTree& rst) {
+std::pair<std::vector<VertexID>, EdgeWeight> findSmallest2RespectingCut(const RootedSpanningTree& rst) {
     const WeightedGraph& graph = rst.graph();
 
     std::vector<std::vector<RootedSpanningTree::Interval>> subsequences(graph.numEdges());
@@ -102,4 +102,9 @@ std::vector<size_t> findSmallest2RespectingCut(const RootedSpanningTree& rst) {
     auto smallest1RespectingCut = findSmallest1RespectingCut(rst, S_plus, S_minus);
     auto smallestStrictly2RespectingCut = findSmallestStrictly2RespectingCut(rst, subsequences, S_plus, S_minus);
 
+    if (std::get<0>(smallest1RespectingCut) <= std::get<0>(smallestStrictly2RespectingCut)) {
+        return { rst.cutFromCrossingEdges({ std::get<1>(smallest1RespectingCut) }), std::get<0>(smallest1RespectingCut) };
+    } else {
+        return { rst.cutFromCrossingEdges({ std::get<1>(smallestStrictly2RespectingCut), std::get<2>(smallestStrictly2RespectingCut) }), std::get<0>(smallestStrictly2RespectingCut) };
+    }
 }
