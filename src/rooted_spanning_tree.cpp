@@ -50,7 +50,7 @@ void RootedSpanningTree::heavyLightDecomposition() {
 
     std::vector<size_t> orderedEdgeSelection;
     orderedEdgeSelection.reserve(mEdgeSelection.size());    
-    mHeavyPathStart.resize(mGraph.numVertices());
+    mHeavyPathStart.resize(mEdgeSelection.size());
 
     // artificial stack to avoid stack overflow
     struct Parameters {
@@ -90,15 +90,20 @@ void RootedSpanningTree::heavyLightDecomposition() {
             if (p.heavyChildIndex != HEAVY_CHILD_NOT_SEARCHED) {
                 // Heavy child found
                 AdjacentVertex& heavyChild = children[p.heavyChildIndex];
+
                 // New heavy path starts here
-                heavyChild.edgeIndex = orderedEdgeSelection.size();
-                mParents[p.heavyChildIndex].edgeIndex = orderedEdgeSelection.size();
-                currentHeavyPathStart = orderedEdgeSelection.size();
-                mHeavyPathStart[heavyChild.vertex] = currentHeavyPathStart;
+                size_t originalEdgeIndex = mEdgeSelection[heavyChild.edgeIndex];
+                size_t orderedEdgeIndex = orderedEdgeSelection.size();
+                heavyChild.edgeIndex = orderedEdgeIndex;
+                mParents[heavyChild.vertex].edgeIndex = orderedEdgeIndex;
+                currentHeavyPathStart = orderedEdgeIndex;
+                mHeavyPathStart[orderedEdgeIndex] = currentHeavyPathStart;
                 // Visit heavy child first
-                orderedEdgeSelection.push_back(heavyChild.edgeIndex);
+
+                orderedEdgeSelection.push_back(originalEdgeIndex);
                 stack.push({ heavyChild.vertex, 0, HEAVY_CHILD_NOT_SEARCHED });
                 continue;
+
             } else {
                 // Heavy child not found
                 p.heavyChildIndex = HEAVY_CHILD_NOT_FOUND;
@@ -117,11 +122,13 @@ void RootedSpanningTree::heavyLightDecomposition() {
 
         // Visit child
         AdjacentVertex& child = children[p.childIndex];
+        size_t edgeIndexInGraph = mEdgeSelection[child.edgeIndex];
         child.edgeIndex = orderedEdgeSelection.size();
-        mParents[p.childIndex].edgeIndex = orderedEdgeSelection.size();
-        mHeavyPathStart[child.vertex] = currentHeavyPathStart;
-        orderedEdgeSelection.push_back(child.edgeIndex);
+        mParents[child.vertex].edgeIndex = orderedEdgeSelection.size();
+        mHeavyPathStart[orderedEdgeSelection.size()] = currentHeavyPathStart;
+        orderedEdgeSelection.push_back(edgeIndexInGraph);
 
+        p.childIndex++;
         if (p.childIndex == children.size()) {
             // In this case, this is the last child of this vertex that we need to visit.
             // There is no need to come back to this vertex once the child has been examined
@@ -138,13 +145,13 @@ void RootedSpanningTree::heavyLightDecomposition() {
 std::vector<RootedSpanningTree::Interval> RootedSpanningTree::findVertex2RootSubsequences(VertexID vertex) const {
     std::vector<Interval> subseq;
     subseq.reserve(2 * size_t(ceil(log2(mGraph.numVertices()))) + 2);
-    while (vertex != mRoot) {
+    while (vertex != mRoot && subseq.size() < 10) {
         Interval interval;
         interval.end = mParents[vertex].edgeIndex;
         interval.start = mHeavyPathStart[interval.end];
 
-        const WeightedEdge& edge = mGraph.edges()[interval.start];
-        vertex = edge.endpoint(0) ? mParents[edge.endpoint(1)].vertex == edge.endpoint(0) : edge.endpoint(1);
+        const WeightedEdge& startEdge = this->edge(interval.start);
+        vertex = mParents[startEdge.endpoint(1)].vertex == startEdge.endpoint(0) ? startEdge.endpoint(0) : startEdge.endpoint(1);
         subseq.push_back(interval);
     }
     return subseq;
@@ -166,16 +173,19 @@ std::vector<RootedSpanningTree::Interval> RootedSpanningTree::findVertex2VertexS
         v2Intervals.pop_back();
     }
 
-    if (v1Intervals.back().end < v2Intervals.back().end) {
-        v2Intervals.back().start = v1Intervals.back().end + 1;
-        v1Intervals.pop_back();
-    } else {
-        v1Intervals.back().start = v2Intervals.back().end + 1;
-        v2Intervals.pop_back();
+    if (!v1Intervals.empty() && !v2Intervals.empty()) {
+        if (v1Intervals.back().end < v2Intervals.back().end) {
+            v2Intervals.back().start = v1Intervals.back().end + 1;
+            v1Intervals.pop_back();
+        } else {
+            v1Intervals.back().start = v2Intervals.back().end + 1;
+            v2Intervals.pop_back();
+        }
     }
 
     std::reverse(v2Intervals.begin(), v2Intervals.end());
     v1Intervals.insert(v1Intervals.end(), v2Intervals.begin(), v2Intervals.end());
+
     return v1Intervals;
 }
 
