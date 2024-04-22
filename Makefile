@@ -1,31 +1,69 @@
-# Compiler
-CXX = g++
-# Compiler flags
-CXXFLAGS = -std=c++17 -Wall
+########################################################################
+####################### Makefile Template ##############################
+########################################################################
 
-# Source files directory
-SRC_DIR = src
+# Compiler settings - Can be customized.
+CC = g++
+CXXFLAGS = -std=c++17 -Wall -D_DEBUG
+LDFLAGS = 
 
-# Source files
-SRCS = $(wildcard $(SRC_DIR)/*.cpp)
+# Makefile settings - Can be customized.
+APPNAME = mincut-karger-simple
+EXT = .cpp
+SRCDIR = src
+OBJDIR = obj
 
-# Object files
-OBJS = $(SRCS:$(SRC_DIR)/%.cpp=%.o)
+############## Do not change anything from here downwards! #############
+SRC = $(wildcard $(SRCDIR)/*$(EXT))
+OBJ = $(SRC:$(SRCDIR)/%$(EXT)=$(OBJDIR)/%.o)
+DEP = $(OBJ:$(OBJDIR)/%.o=%.d)
+# UNIX-based OS variables & settings
+RM = rm
+DELOBJ = $(OBJ)
+# Windows OS variables & settings
+DEL = del
+EXE = .exe
+WDELOBJ = $(SRC:$(SRCDIR)/%$(EXT)=$(OBJDIR)\\%.o)
 
-# Executable name
-TARGET = mincut-karger-simple.exe
+########################################################################
+####################### Targets beginning here #########################
+########################################################################
 
-# Default target
-all: $(TARGET)
+all: $(APPNAME)
 
-# Rule to build the executable
-$(TARGET): $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $@ $^
+# Builds the app
+$(APPNAME): $(OBJ)
+	$(CC) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
 
-# Rule to build object files
-%.o: $(SRC_DIR)/%.cpp
-	$(CXX) $(CXXFLAGS) -c -o $@ $<
+# Creates the dependecy rules
+%.d: $(SRCDIR)/%$(EXT)
+	@$(CPP) $(CFLAGS) $< -MM -MT $(@:%.d=$(OBJDIR)/%.o) >$@
 
-# Clean up the generated files
+# Includes all .h files
+-include $(DEP)
+
+# Building rule for .o files and its .c/.cpp in combination with all .h
+$(OBJDIR)/%.o: $(SRCDIR)/%$(EXT)
+	$(CC) $(CXXFLAGS) -o $@ -c $<
+
+################### Cleaning rules for Unix-based OS ###################
+# Cleans complete project
+.PHONY: clean
 clean:
-	del /Q $(OBJS) $(TARGET)
+	$(RM) $(DELOBJ) $(DEP) $(APPNAME)
+
+# Cleans only all files with the extension .d
+.PHONY: cleandep
+cleandep:
+	$(RM) $(DEP)
+
+#################### Cleaning rules for Windows OS #####################
+# Cleans complete project
+.PHONY: cleanw
+cleanw:
+	$(DEL) $(WDELOBJ) $(DEP) $(APPNAME)$(EXE)
+
+# Cleans only all files with the extension .d
+.PHONY: cleandepw
+cleandepw:
+	$(DEL) $(DEP)
