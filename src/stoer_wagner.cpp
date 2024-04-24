@@ -64,7 +64,6 @@ std::pair<std::vector<VertexID>, EdgeWeight> stoerWagner(const WeightedGraph& gr
         }
         
         contracted[s].insert(contracted[s].end(), contracted[t].begin(), contracted[t].end());
-        contracted[t].clear();
         for (VertexID vid = 0; vid < graph.numVertices(); vid++) {
             weights[s][vid] += weights[t][vid];
             weights[vid][s] = weights[s][vid];
