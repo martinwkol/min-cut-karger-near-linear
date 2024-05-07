@@ -1,8 +1,10 @@
 #include "random.hpp"
 
 #include <ctime>
+#include <limits>
+#include <vector>
 
-std::default_random_engine randomGenerator(time(0));
+std::default_random_engine randomGenerator(1514464);
 
 ull binom(ull trials, double prob, ull ciel) {
     // use inverse transform sampling
@@ -17,4 +19,30 @@ ull binom(ull trials, double prob, ull ciel) {
         sumBinomProb += binomProb;
     }
     return ciel;
+}
+
+WeightedGraph randomConnectedWeightedGraph(size_t numVertices, size_t numEdges, EdgeWeight minWeight, EdgeWeight maxWeight) {
+    std::uniform_int_distribution<int> vertexDistr(0, std::numeric_limits<int>::max());
+    std::uniform_real_distribution<double> weightDistr(minWeight, maxWeight);
+
+    std::vector<WeightedEdge> edges;
+    edges.reserve(numEdges);
+
+    // Ensure that the graph is connected
+    for (VertexID endpoint0 = 1; endpoint0 < numVertices; endpoint0++) {
+        VertexID endpoint1 = vertexDistr(randomGenerator) % endpoint0;
+        EdgeWeight weight = weightDistr(randomGenerator);
+        edges.emplace_back(endpoint0, endpoint1, weight);
+    }
+
+    // Add remaining edges
+    for (size_t i = numVertices; i < numEdges; i++) {
+        VertexID endpoint0 = vertexDistr(randomGenerator) % numVertices;
+        VertexID endpoint1 = vertexDistr(randomGenerator) % (numVertices - 1);
+        if (endpoint1 >= endpoint0) endpoint1++;
+        EdgeWeight weight = weightDistr(randomGenerator);
+        edges.emplace_back(endpoint0, endpoint1, weight);
+    }
+
+    return WeightedGraph(numVertices, std::move(edges));
 }
