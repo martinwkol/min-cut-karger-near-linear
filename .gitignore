@@ -34,3 +34,6 @@ mincut-karger-simple
 
 # vscode
 .vscode/
+
+# build folder
+build/
