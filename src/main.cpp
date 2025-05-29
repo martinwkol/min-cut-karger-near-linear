@@ -5,6 +5,12 @@
 #include "two_respecting_trees.hpp"
 #include "two_respecting_cuts.hpp"
 
+double readDouble() {
+    double d;
+    std::cin >> d;
+    return d;
+}
+
 WeightedGraph readWeightedGraph() {
     size_t numVertices;
     size_t numEdges;
@@ -26,8 +32,9 @@ WeightedGraph readWeightedGraph() {
 }
 
 int main() {
+    double d = readDouble();
     WeightedGraph graph = readWeightedGraph();
-    TreePacking packing = findTwoRespectingTrees(graph, 3);
+    TreePacking packing = findTwoRespectingTrees(graph, d);
     std::vector<VertexID> minCut;
     EdgeWeight minCutWeight = INFINITE_WEIGHT;
     for (const std::vector<size_t>& edgeSelection : packing.trees()) {
