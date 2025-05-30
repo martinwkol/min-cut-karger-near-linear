@@ -174,7 +174,7 @@ std::vector<RootedSpanningTree::Interval> RootedSpanningTree::findVertex2VertexS
         v2Intervals.pop_back();
     }
 
-    if (!v1Intervals.empty() && !v2Intervals.empty()) {
+    if (!v1Intervals.empty() && !v2Intervals.empty() && v1Intervals.back().start == v2Intervals.back().start) {
         if (v1Intervals.back().end < v2Intervals.back().end) {
             v2Intervals.back().start = v1Intervals.back().end + 1;
             v1Intervals.pop_back();
