@@ -256,7 +256,7 @@ std::string RootedSpanningTree::toString() const {
         const AdjacentVertex& child = children[p.childIndex];
         bool childIsLast = p.childIndex == children.size() - 1;
         ++p.childIndex;
-        stack.push({ p.prefix + (p.isLast ? "│   " : "    "), child.vertex, 0, childIsLast });
+        stack.push({ p.prefix + (p.isLast ? "    " : "|   "), child.vertex, 0, childIsLast });
     }
     
 
