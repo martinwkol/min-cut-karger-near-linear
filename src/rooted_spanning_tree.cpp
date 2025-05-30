@@ -97,7 +97,6 @@ void RootedSpanningTree::heavyLightDecomposition() {
                 size_t orderedEdgeIndex = orderedEdgeSelection.size();
                 heavyChild.edgeIndex = orderedEdgeIndex;
                 mParents[heavyChild.vertex].edgeIndex = orderedEdgeIndex;
-                currentHeavyPathStart = orderedEdgeIndex;
                 mHeavyPathStart[orderedEdgeIndex] = currentHeavyPathStart;
                 // Visit heavy child first
 
@@ -121,11 +120,12 @@ void RootedSpanningTree::heavyLightDecomposition() {
             continue;
         }
 
-        // Visit child
+        // Visit light child
         AdjacentVertex& child = children[p.childIndex];
         size_t edgeIndexInGraph = mEdgeSelection[child.edgeIndex];
         child.edgeIndex = orderedEdgeSelection.size();
         mParents[child.vertex].edgeIndex = orderedEdgeSelection.size();
+        currentHeavyPathStart = orderedEdgeSelection.size(); // light child -> new heavy path
         mHeavyPathStart[orderedEdgeSelection.size()] = currentHeavyPathStart;
         orderedEdgeSelection.push_back(edgeIndexInGraph);
 
