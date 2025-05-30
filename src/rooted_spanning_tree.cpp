@@ -3,6 +3,7 @@
 #include <stack>
 #include <algorithm>
 #include <cmath>
+#include <sstream>
 
 void RootedSpanningTree::initParentsChildren() {
     mParents.resize(mGraph.numVertices(), NO_PARENT);
@@ -223,4 +224,41 @@ std::vector<VertexID> RootedSpanningTree::cutFromCrossingEdges(const std::vector
     }
 
     return cut;
+}
+
+std::string RootedSpanningTree::toString() const {
+    std::stringstream s;
+
+    // artificial stack to avoid stack overflow
+    struct Parameters {
+        std::string prefix;
+        VertexID vertex;
+        size_t childIndex;
+        bool isLast;
+    };
+    
+    std::stack<Parameters, std::deque<Parameters>> stack;
+    stack.push({ "", mRoot, 0, true });
+    while (!stack.empty()) {
+        Parameters& p = stack.top();
+        s << p.prefix;
+        if (p.childIndex == 0) {
+            if (p.isLast)   s << "└──";
+            else            s << "├──";
+            s << p.vertex << '\n';
+        }
+        const auto& children = mChildren[p.vertex];
+        if (p.childIndex == children.size()) {
+            stack.pop();
+            continue;
+        }
+
+        const AdjacentVertex& child = children[p.childIndex];
+        bool childIsLast = p.childIndex == children.size() - 1;
+        ++p.childIndex;
+        stack.push({ p.prefix + (p.isLast ? "│   " : "    "), child.vertex, 0, childIsLast });
+    }
+    
+
+    return s.str();
 }
