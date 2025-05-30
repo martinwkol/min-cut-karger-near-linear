@@ -241,8 +241,8 @@ std::string RootedSpanningTree::toString() const {
     stack.push({ "", mRoot, 0, true });
     while (!stack.empty()) {
         Parameters& p = stack.top();
-        s << p.prefix;
         if (p.childIndex == 0) {
+            s << p.prefix;
             if (p.isLast)   s << "└──";
             else            s << "├──";
             s << p.vertex << '\n';
@@ -254,9 +254,10 @@ std::string RootedSpanningTree::toString() const {
         }
 
         const AdjacentVertex& child = children[p.childIndex];
+        std::string childPrefix = p.prefix + (p.isLast ? "    " : "│   ");
         bool childIsLast = p.childIndex == children.size() - 1;
         ++p.childIndex;
-        stack.push({ p.prefix + (p.isLast ? "    " : "|   "), child.vertex, 0, childIsLast });
+        stack.push({ std::move(childPrefix), child.vertex, 0, childIsLast });
     }
     
 
