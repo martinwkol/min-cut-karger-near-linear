@@ -30,7 +30,7 @@ TreePacking findTwoRespectingTrees(const WeightedGraph& graph, double d, double 
         throw std::invalid_argument("eps2 and / or eps3 too large");
     }
 
-    double f = 1.5 - (1.0 + eps1) * (1.0 + eps2) / ((1.0 - eps2) * (1.0 - eps3));
+    double f = 3/2.0 - ((2.0+eps1)*(1.0+eps2))/((2.0-eps1)*(1.0-eps3));
     if (f <= 0) {
         throw std::invalid_argument("eps1 and / or eps2 and / or eps3 too large");
     }
