@@ -16,7 +16,11 @@ struct S2RespResult {
     size_t cutEdgeIndex2;
 };
 
-static S1RespResult findSmallest1RespectingCut(const RootedSpanningTree& rst, const std::vector<std::vector<size_t>>& S_plus, const std::vector<std::vector<size_t>>& S_minus) {       
+static S1RespResult findSmallest1RespectingCut(
+    const RootedSpanningTree& rst, 
+    const std::vector<std::vector<size_t>>& S_plus, 
+    const std::vector<std::vector<size_t>>& S_minus
+) {       
     const WeightedGraph& graph = rst.graph();
     EdgeWeight weight = 0;
     for (size_t edgeIndex : S_plus[0]) {
@@ -41,10 +45,12 @@ static S1RespResult findSmallest1RespectingCut(const RootedSpanningTree& rst, co
     return { minWeight, rstCrossingEdgeIndex };
 }
 
-static S2RespResult findSmallestStrictly2RespectingCut(const RootedSpanningTree& rst, 
+static S2RespResult findSmallestStrictly2RespectingCut(
+    const RootedSpanningTree& rst, 
     const std::vector<std::vector<RootedSpanningTree::Interval>>& subsequences, 
-    const std::vector<std::vector<size_t>>& S_plus, const std::vector<std::vector<size_t>>& S_minus) {
-    
+    const std::vector<std::vector<size_t>>& S_plus, 
+    const std::vector<std::vector<size_t>>& S_minus
+) {
     const WeightedGraph& graph = rst.graph();
     TreeEdgeWeighter tew(rst.numEdges());
     std::vector<bool> inSPlus0(graph.numEdges(), false);
