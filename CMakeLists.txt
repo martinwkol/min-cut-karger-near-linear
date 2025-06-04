@@ -12,22 +12,11 @@ set(CMAKE_CXX_FLAGS "-Wall -Wextra")
 set(CMAKE_CXX_FLAGS_DEBUG "-g")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
-set(SCR_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
+enable_testing()
 
-set(SOURCES
-    ${SCR_DIR}/main.cpp
-    ${SCR_DIR}/graph.cpp
-    ${SCR_DIR}/random.cpp
-    ${SCR_DIR}/rooted_spanning_tree.cpp
-    ${SCR_DIR}/segment_tree.cpp
-    ${SCR_DIR}/spanning_tree.cpp
-    ${SCR_DIR}/stoer_wagner.cpp
-    ${SCR_DIR}/tree_edge_weighter.cpp
-    ${SCR_DIR}/tree_packing.cpp
-    ${SCR_DIR}/two_respecting_cuts.cpp
-    ${SCR_DIR}/two_respecting_trees.cpp
-    ${SCR_DIR}/union_find.cpp
-)
+add_subdirectory(src)
+add_subdirectory(tests)
 
-add_executable(${PROJECT_NAME} ${SOURCES})
+add_executable(mincut src/main.cpp)
+target_link_libraries(mincut PRIVATE mincut-lib)
 
