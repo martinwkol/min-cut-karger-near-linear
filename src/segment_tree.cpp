@@ -1,17 +1,29 @@
 #include "segment_tree.hpp"
 
+static size_t leftChild(size_t parent) {
+    return parent * 2 + 1;
+}
+
+static size_t rightChild(size_t parent) {
+    return parent * 2 + 2;
+}
+
+static size_t middle(const Interval& interval) {
+    return (interval.start + interval.end) / 2;
+}
+
 void SegmentTree::initTree(const DataType* list, const Interval& interval, size_t valuesIndex) {
     if (interval.start == interval.end) {
         mValues[valuesIndex] = list[interval.start];
         return;
     }
 
-    size_t middle = (interval.start + interval.end) / 2;
-    size_t indexLeftChild = valuesIndex * 2;
-    size_t indexRightChild = valuesIndex * 2 + 1;
+    const size_t intervalMiddle = middle(interval);
+    const size_t indexLeftChild = leftChild(valuesIndex);
+    const size_t indexRightChild = rightChild(valuesIndex);
     
-    initTree(list, { interval.start, middle }, indexLeftChild);
-    initTree(list, { middle + 1, interval.end }, indexRightChild);
+    initTree(list, { interval.start, intervalMiddle }, indexLeftChild);
+    initTree(list, { intervalMiddle + 1, interval.end }, indexRightChild);
     mValues[valuesIndex] = std::min(mValues[indexLeftChild], mValues[indexRightChild]);
 }
 
@@ -23,8 +35,8 @@ void SegmentTree::updateLazy(size_t valuesIndex, const Interval& nodeInterval) {
         value += lazy;
         if (nodeInterval.start < nodeInterval.end) {
             // Propagate to children
-            mLazy[valuesIndex * 2] += lazy;
-            mLazy[valuesIndex * 2 + 1] += lazy;
+            mLazy[leftChild(valuesIndex)] += lazy;
+            mLazy[rightChild(valuesIndex)] += lazy;
         }
         lazy = 0;
     }
@@ -37,8 +49,8 @@ void SegmentTree::addToIntervalRecursive(
     size_t valuesIndex
 ) {    
     DataType& value = mValues[valuesIndex];
-    size_t indexLeftChild = valuesIndex * 2;
-    size_t indexRightChild = valuesIndex * 2 + 1;
+    const size_t indexLeftChild = leftChild(valuesIndex);
+    const size_t indexRightChild = rightChild(valuesIndex);
     
     updateLazy(valuesIndex, nodeInterval);
 
@@ -56,9 +68,9 @@ void SegmentTree::addToIntervalRecursive(
         return;
     }
 
-    size_t middle = (nodeInterval.start + nodeInterval.end) / 2;
-    addToIntervalRecursive(value2add, addRange, { nodeInterval.start, middle }, indexLeftChild);
-    addToIntervalRecursive(value2add, addRange, { middle + 1, nodeInterval.end }, indexRightChild);
+    size_t intervalMiddle = middle(nodeInterval);
+    addToIntervalRecursive(value2add, addRange, { nodeInterval.start, intervalMiddle }, indexLeftChild);
+    addToIntervalRecursive(value2add, addRange, { intervalMiddle + 1, nodeInterval.end }, indexRightChild);
     mValues[valuesIndex] = std::min(mValues[indexLeftChild], mValues[indexRightChild]);
 }
 
@@ -75,19 +87,19 @@ size_t SegmentTree::minIndex() {
     size_t valuesIndex = 0;
 
     while (interval.start < interval.end) {
-        size_t middle = (interval.start + interval.end) / 2;
-        size_t indexLeftChild = valuesIndex * 2;
-        size_t indexRightChild = valuesIndex * 2 + 1;
+        size_t intervalMiddle = middle(interval);
+        size_t indexLeftChild = leftChild(valuesIndex);
+        size_t indexRightChild = rightChild(valuesIndex);
 
-        updateLazy(indexLeftChild, { interval.start, middle });
-        updateLazy(indexRightChild, { middle + 1, interval.end });
+        updateLazy(indexLeftChild, { interval.start, intervalMiddle });
+        updateLazy(indexRightChild, { intervalMiddle + 1, interval.end });
 
         if (mValues[indexLeftChild] < mValues[indexRightChild]) {
             valuesIndex = indexLeftChild;
-            interval.end = middle;
+            interval.end = intervalMiddle;
         } else {
             valuesIndex = indexRightChild;
-            interval.start = middle + 1;
+            interval.start = intervalMiddle + 1;
         }
     }
 

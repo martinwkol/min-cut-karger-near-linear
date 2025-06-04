@@ -7,7 +7,7 @@ class SegmentTree {
 public:
     typedef EdgeWeight DataType;
 
-private:
+private: 
     size_t mListSize;
     std::vector<DataType> mValues;
     std::vector<DataType> mLazy;
