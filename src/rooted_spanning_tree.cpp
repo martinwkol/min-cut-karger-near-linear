@@ -190,7 +190,7 @@ std::vector<RootedSpanningTree::Interval> RootedSpanningTree::findVertex2VertexS
     return v1Intervals;
 }
 
-std::vector<VertexID> RootedSpanningTree::cutFromCrossingEdges(const std::vector<size_t>& crossingEdgeIndices, bool containsRoot) const {
+std::vector<VertexID> RootedSpanningTree::cutVerticesFromCrossingEdges(const std::vector<size_t>& crossingEdgeIndices, bool containsRoot) const {
     std::vector<bool> isCoossingEdge(numEdges(), false);
     for (size_t crossingEdgeIndex : crossingEdgeIndices) {
         isCoossingEdge[crossingEdgeIndex] = true;

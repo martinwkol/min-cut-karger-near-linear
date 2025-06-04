@@ -2,6 +2,7 @@
 
 #include <limits>
 #include <cstddef>
+#include <vector>
 
 typedef unsigned int uint;
 typedef unsigned long long ull;
@@ -11,3 +12,8 @@ typedef double EdgeWeight;
 typedef ull EdgeMultiplicity;
 
 constexpr static EdgeWeight INFINITE_WEIGHT = std::numeric_limits<EdgeWeight>::max(); 
+
+struct Cut {
+    std::vector<VertexID> vertices;
+    EdgeWeight weight = INFINITE_WEIGHT;
+};

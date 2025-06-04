@@ -38,18 +38,17 @@ int main() {
     double d = readDouble();
     WeightedGraph graph = readWeightedGraph();
     TreePacking packing = findTwoRespectingTrees(graph, d);
-    std::vector<VertexID> minCut;
-    EdgeWeight minCutWeight = INFINITE_WEIGHT;
+    Cut minCut;
+    minCut.weight = INFINITE_WEIGHT;
     for (const std::vector<size_t>& edgeSelection : packing.trees()) {
         RootedSpanningTree rst(graph, edgeSelection, 0);
-        auto smallestCut = findSmallest2RespectingCut(rst);
-        if (smallestCut.second < minCutWeight) {
-            minCutWeight = smallestCut.second;
-            minCut = std::move(smallestCut.first);
+        Cut smallestCut = findSmallest2RespectingCut(rst);
+        if (smallestCut.weight < minCut.weight) {
+            minCut = std::move(smallestCut);
         }
     }
-    std::cout << minCutWeight << std::endl;
-    for (VertexID vertex : minCut) {
+    std::cout << minCut.weight << std::endl;
+    for (VertexID vertex : minCut.vertices) {
         std::cout << vertex << '\n';
     }
 
