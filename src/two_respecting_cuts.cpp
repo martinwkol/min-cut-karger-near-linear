@@ -47,12 +47,12 @@ static S2RespResult findSmallestStrictly2RespectingCut(const RootedSpanningTree&
     
     const WeightedGraph& graph = rst.graph();
     TreeEdgeWeighter tew(rst.numEdges());
-    std::vector<bool> inSPlus0(rst.numEdges(), false);
+    std::vector<bool> inSPlus0(graph.numEdges(), false);
     for (size_t edgeIndex : S_plus[0]) {
         tew.nonPathAdd(graph.edge(edgeIndex).weight(), subsequences[edgeIndex]);
         inSPlus0[edgeIndex] = true;
     }
-    for (size_t i = 0; i < rst.numEdges(); i++) {
+    for (size_t i = 0; i < graph.numEdges(); i++) {
         if (!inSPlus0[i]) {
             tew.pathAdd(graph.edge(i).weight(), subsequences[i]);
         }
