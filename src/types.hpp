@@ -13,6 +13,11 @@ typedef ull EdgeMultiplicity;
 
 constexpr static EdgeWeight INFINITE_WEIGHT = std::numeric_limits<EdgeWeight>::max(); 
 
+struct Interval {
+    size_t start;
+    size_t end;
+};
+
 struct Cut {
     std::vector<VertexID> vertices;
     EdgeWeight weight = INFINITE_WEIGHT;

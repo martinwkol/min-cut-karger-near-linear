@@ -143,7 +143,7 @@ void RootedSpanningTree::heavyLightDecomposition() {
     mEdgeSelection = std::move(orderedEdgeSelection);
 }
 
-std::vector<RootedSpanningTree::Interval> RootedSpanningTree::findVertex2RootSubsequences(VertexID vertex) const {
+std::vector<Interval> RootedSpanningTree::findVertex2RootSubsequences(VertexID vertex) const {
     std::vector<Interval> subseq;
     subseq.reserve(2 * size_t(ceil(log2(mGraph.numVertices()))) + 2);
     while (vertex != mRoot && subseq.size() < 10) {
@@ -165,7 +165,7 @@ RootedSpanningTree::RootedSpanningTree(const WeightedGraph& graph, const EdgeSel
     heavyLightDecomposition();
 }
 
-std::vector<RootedSpanningTree::Interval> RootedSpanningTree::findVertex2VertexSubsequences(VertexID vertex1, VertexID vertex2) const {
+std::vector<Interval> RootedSpanningTree::findVertex2VertexSubsequences(VertexID vertex1, VertexID vertex2) const {
     std::vector<Interval> v1Intervals = findVertex2RootSubsequences(vertex1);
     std::vector<Interval> v2Intervals = findVertex2RootSubsequences(vertex2);
 

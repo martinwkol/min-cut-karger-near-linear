@@ -47,7 +47,7 @@ static S1RespResult findSmallest1RespectingCut(
 
 static S2RespResult findSmallestStrictly2RespectingCut(
     const RootedSpanningTree& rst, 
-    const std::vector<std::vector<RootedSpanningTree::Interval>>& subsequences, 
+    const std::vector<std::vector<Interval>>& subsequences, 
     const std::vector<std::vector<size_t>>& S_plus, 
     const std::vector<std::vector<size_t>>& S_minus
 ) {
@@ -97,7 +97,7 @@ static S2RespResult findSmallestStrictly2RespectingCut(
 Cut findSmallest2RespectingCut(const RootedSpanningTree& rst) {
     const WeightedGraph& graph = rst.graph();
 
-    std::vector<std::vector<RootedSpanningTree::Interval>> subsequences;
+    std::vector<std::vector<Interval>> subsequences;
     std::vector<std::vector<size_t>> S_plus(graph.numVertices());
     std::vector<std::vector<size_t>> S_minus(graph.numVertices());
     subsequences.reserve(graph.numEdges());
@@ -106,11 +106,11 @@ Cut findSmallest2RespectingCut(const RootedSpanningTree& rst) {
     for (size_t i = 0; i < graphEdges.size(); i++) {
         const WeightedEdge& edge = graphEdges[i];
         subsequences.push_back(rst.findVertex2VertexSubsequences(edge.endpoint(0), edge.endpoint(1)));
-        for (const RootedSpanningTree::Interval& subseq : subsequences.back()) {
+        for (const Interval& subseq : subsequences.back()) {
             S_plus[subseq.start].push_back(i);
             S_minus[subseq.end + 1].push_back(i);
         }
-        for (const RootedSpanningTree::Interval& subseq : subsequences.back()) {
+        for (const Interval& subseq : subsequences.back()) {
             if (!S_plus[subseq.start].empty() && !S_minus[subseq.start].empty() && 
                 S_plus[subseq.start].back() == i && S_minus[subseq.start].back() == i) {
                 

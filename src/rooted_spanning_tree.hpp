@@ -13,11 +13,6 @@ public:
         VertexID vertex;
     };
 
-    struct Interval {
-        size_t start;
-        size_t end;
-    };
-
 private:
     // Indixes selected edges
     typedef std::vector<size_t> EdgeSelection;    
