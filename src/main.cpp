@@ -1,9 +1,11 @@
 #include <iostream>
 #include <limits>
+#include <ctime>
 
 #include "graph.hpp"
 #include "two_respecting_trees.hpp"
 #include "two_respecting_cuts.hpp"
+#include "random.hpp"
 
 double readDouble() {
     double d;
@@ -32,6 +34,7 @@ WeightedGraph readWeightedGraph() {
 }
 
 int main() {
+    randomGenerator.seed(std::time(0));
     double d = readDouble();
     WeightedGraph graph = readWeightedGraph();
     TreePacking packing = findTwoRespectingTrees(graph, d);
