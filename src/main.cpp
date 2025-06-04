@@ -1,19 +1,27 @@
 #include <iostream>
 #include <limits>
+#include <ctime>
 
 #include "graph.hpp"
 #include "two_respecting_trees.hpp"
 #include "two_respecting_cuts.hpp"
+#include "random.hpp"
 
-double readDouble() {
+struct ConsoleInput {
     double d;
-    std::cin >> d;
-    return d;
+    WeightedGraph graph;
+};
+
+static void initRandomGenerator() {
+    randomGenerator.seed(std::time(0));
 }
 
-WeightedGraph readWeightedGraph() {
+static ConsoleInput readConsoleInput() {
+    double d;
     size_t numVertices;
     size_t numEdges;
+
+    std::cin >> d;
     std::cin >> numVertices >> numEdges;
 
     std::vector<WeightedEdge> edges;
@@ -28,27 +36,34 @@ WeightedGraph readWeightedGraph() {
         edges.emplace_back(endpoint0, endpoint1, weight);
     }
 
-    return WeightedGraph(numVertices, std::move(edges));
+    return { d, WeightedGraph(numVertices, std::move(edges)) };
+}
+
+static Cut findLikelyMinCut(const WeightedGraph& graph, const TreePacking& packing) {
+    Cut minCut;
+    minCut.weight = INFINITE_WEIGHT;
+    for (const std::vector<size_t>& edgeSelection : packing.trees()) {
+        RootedSpanningTree rst(graph, edgeSelection, 0);
+        Cut smallestCut = findSmallest2RespectingCut(rst);
+        if (smallestCut.weight < minCut.weight) {
+            minCut = std::move(smallestCut);
+        }
+    }
+    return minCut;
+}
+
+static void printCut(const Cut& cut) {
+    std::cout << cut.weight << '\n';
+    for (VertexID vertex : cut.vertices) {
+        std::cout << vertex << '\n';
+    }
 }
 
 int main() {
-    double d = readDouble();
-    WeightedGraph graph = readWeightedGraph();
-    TreePacking packing = findTwoRespectingTrees(graph, d);
-    std::vector<VertexID> minCut;
-    EdgeWeight minCutWeight = INFINITE_WEIGHT;
-    for (const std::vector<size_t>& edgeSelection : packing.trees()) {
-        RootedSpanningTree rst(graph, edgeSelection, 0);
-        auto smallestCut = findSmallest2RespectingCut(rst);
-        if (smallestCut.second < minCutWeight) {
-            minCutWeight = smallestCut.second;
-            minCut = std::move(smallestCut.first);
-        }
-    }
-    std::cout << minCutWeight << std::endl;
-    for (VertexID vertex : minCut) {
-        std::cout << vertex << '\n';
-    }
-
+    initRandomGenerator();
+    ConsoleInput input = readConsoleInput();
+    TreePacking packing = findTwoRespectingTrees(input.graph, input.d);
+    Cut minCut = findLikelyMinCut(input.graph, packing);
+    printCut(minCut);
     return 0;
 }

@@ -60,7 +60,7 @@ public:
     const WeightedEdge& edge(size_t spanningTreeEdgeIndex) const { return mGraph.edge(originalEdgeIndex(spanningTreeEdgeIndex)); }
 
     std::vector<Interval> findVertex2VertexSubsequences(VertexID vertex1, VertexID vertex2) const;
-    std::vector<VertexID> cutFromCrossingEdges(const std::vector<size_t>& crossingEdgeIndices, bool containsRoot = false) const;
+    std::vector<VertexID> cutVerticesFromCrossingEdges(const std::vector<size_t>& crossingEdgeIndices, bool containsRoot = false) const;
 
     std::string toString() const;
 };
