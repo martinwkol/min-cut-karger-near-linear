@@ -1,4 +1,5 @@
 add_library(mincut-lib
+    find_mincut.cpp
     graph.cpp
     random.cpp
     rooted_spanning_tree.cpp

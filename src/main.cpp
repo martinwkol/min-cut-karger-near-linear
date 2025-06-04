@@ -3,9 +3,8 @@
 #include <ctime>
 
 #include "graph.hpp"
-#include "two_respecting_trees.hpp"
-#include "two_respecting_cuts.hpp"
 #include "random.hpp"
+#include "find_mincut.hpp"
 
 struct ConsoleInput {
     double d;
@@ -39,19 +38,6 @@ static ConsoleInput readConsoleInput() {
     return { d, WeightedGraph(numVertices, std::move(edges)) };
 }
 
-static Cut findLikelyMinCut(const WeightedGraph& graph, const TreePacking& packing) {
-    Cut minCut;
-    minCut.weight = INFINITE_WEIGHT;
-    for (const std::vector<size_t>& edgeSelection : packing.trees()) {
-        RootedSpanningTree rst(graph, edgeSelection, 0);
-        Cut smallestCut = findSmallest2RespectingCut(rst);
-        if (smallestCut.weight < minCut.weight) {
-            minCut = std::move(smallestCut);
-        }
-    }
-    return minCut;
-}
-
 static void printCut(const Cut& cut) {
     std::cout << cut.weight << '\n';
     for (VertexID vertex : cut.vertices) {
@@ -62,8 +48,7 @@ static void printCut(const Cut& cut) {
 int main() {
     initRandomGenerator();
     ConsoleInput input = readConsoleInput();
-    TreePacking packing = findTwoRespectingTrees(input.graph, input.d);
-    Cut minCut = findLikelyMinCut(input.graph, packing);
+    Cut minCut = findLikelyMinCut(input.graph, input.d);
     printCut(minCut);
     return 0;
 }
