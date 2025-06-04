@@ -45,8 +45,8 @@ void SegmentTree::addToIntervalRecursive(DataType value2add, size_t intervalStar
         value += value2add;
         if (left < right) {
             // Propagate to children
-            mLazy[indexLeftChild] += value;
-            mLazy[indexRightChild] += value;
+            mLazy[indexLeftChild] += value2add;
+            mLazy[indexRightChild] += value2add;
         }
         return;
     }
