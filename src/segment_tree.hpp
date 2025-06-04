@@ -12,9 +12,9 @@ private:
     std::vector<DataType> mValues;
     std::vector<DataType> mLazy;
 
-    void initTree(const DataType* list, size_t left, size_t right, size_t valuesIndex);
-    void updateLazy(size_t valuesIndex, size_t left, size_t right);
-    void addToIntervalRecursive(DataType value2add, size_t intervalStart, size_t intervalEnd, size_t left, size_t right, size_t valuesIndex);
+    void initTree(const DataType* list, const Interval& interval, size_t valuesIndex);
+    void updateLazy(size_t valuesIndex, const Interval& nodeInterval);
+    void addToIntervalRecursive(DataType value2add, const Interval& addRange, const Interval& nodeInterval, size_t valuesIndex);
 
 public:
     explicit SegmentTree(size_t listSize);
@@ -24,5 +24,5 @@ public:
     DataType minValue() const { return mValues[0]; }
     size_t minIndex();
 
-    void intervalAdd(DataType value, size_t intervalStart, size_t intervalEnd);
+    void intervalAdd(DataType value, const Interval& interval);
 };

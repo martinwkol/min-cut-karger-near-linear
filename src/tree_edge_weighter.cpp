@@ -7,7 +7,7 @@ void TreeEdgeWeighter::nonIntervalAdd(EdgeWeight weight, const Interval& interva
 
 void TreeEdgeWeighter::pathAdd(EdgeWeight weight, const std::vector<Interval>& pathIntervals) {
     for (const Interval& interval : pathIntervals) {
-        mTree.intervalAdd(weight, interval.start, interval.end);
+        mTree.intervalAdd(weight, interval);
     }
 }
 
