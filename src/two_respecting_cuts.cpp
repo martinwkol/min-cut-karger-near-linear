@@ -4,7 +4,19 @@
 #include <limits>
 #include "tree_edge_weighter.hpp"
 
-static std::tuple<EdgeWeight, size_t> findSmallest1RespectingCut(const RootedSpanningTree& rst, const std::vector<std::vector<size_t>>& S_plus, const std::vector<std::vector<size_t>>& S_minus) {       
+
+struct S1RespResult {
+    EdgeWeight weight;
+    size_t cutEdgeIndex;
+};
+
+struct S2RespResult {
+    EdgeWeight weight;
+    size_t cutEdgeIndex1;
+    size_t cutEdgeIndex2;
+};
+
+static S1RespResult findSmallest1RespectingCut(const RootedSpanningTree& rst, const std::vector<std::vector<size_t>>& S_plus, const std::vector<std::vector<size_t>>& S_minus) {       
     const WeightedGraph& graph = rst.graph();
     EdgeWeight weight = 0;
     for (size_t edgeIndex : S_plus[0]) {
@@ -29,7 +41,7 @@ static std::tuple<EdgeWeight, size_t> findSmallest1RespectingCut(const RootedSpa
     return { minWeight, rstCrossingEdgeIndex };
 }
 
-static std::tuple<EdgeWeight, size_t, size_t> findSmallestStrictly2RespectingCut(const RootedSpanningTree& rst, 
+static S2RespResult findSmallestStrictly2RespectingCut(const RootedSpanningTree& rst, 
     const std::vector<std::vector<RootedSpanningTree::Interval>>& subsequences, 
     const std::vector<std::vector<size_t>>& S_plus, const std::vector<std::vector<size_t>>& S_minus) {
     
@@ -79,9 +91,10 @@ static std::tuple<EdgeWeight, size_t, size_t> findSmallestStrictly2RespectingCut
 Cut findSmallest2RespectingCut(const RootedSpanningTree& rst) {
     const WeightedGraph& graph = rst.graph();
 
-    std::vector<std::vector<RootedSpanningTree::Interval>> subsequences(graph.numEdges());
+    std::vector<std::vector<RootedSpanningTree::Interval>> subsequences;
     std::vector<std::vector<size_t>> S_plus(graph.numVertices());
     std::vector<std::vector<size_t>> S_minus(graph.numVertices());
+    subsequences.reserve(graph.numEdges());
     
     const std::vector<WeightedEdge>& graphEdges = graph.edges();
     for (size_t i = 0; i < graphEdges.size(); i++) {
@@ -101,12 +114,20 @@ Cut findSmallest2RespectingCut(const RootedSpanningTree& rst) {
         }
     }
 
-    auto smallest1RespectingCut = findSmallest1RespectingCut(rst, S_plus, S_minus);
-    auto smallestStrictly2RespectingCut = findSmallestStrictly2RespectingCut(rst, subsequences, S_plus, S_minus);
+    const S1RespResult s1RespResult = findSmallest1RespectingCut(rst, S_plus, S_minus);
+    const S2RespResult s2RespResult = findSmallestStrictly2RespectingCut(rst, subsequences, S_plus, S_minus);
 
-    if (std::get<0>(smallest1RespectingCut) <= std::get<0>(smallestStrictly2RespectingCut)) {
-        return { rst.cutVerticesFromCrossingEdges({ std::get<1>(smallest1RespectingCut) }), std::get<0>(smallest1RespectingCut) };
+    if (s1RespResult.weight <= s2RespResult.weight) {
+        Cut minCut = {
+            rst.cutVerticesFromCrossingEdges({ s1RespResult.cutEdgeIndex }),
+            s1RespResult.weight
+        };
+        return minCut;
     } else {
-        return { rst.cutVerticesFromCrossingEdges({ std::get<1>(smallestStrictly2RespectingCut), std::get<2>(smallestStrictly2RespectingCut) }), std::get<0>(smallestStrictly2RespectingCut) };
+        Cut minCut = {
+            rst.cutVerticesFromCrossingEdges({ s2RespResult.cutEdgeIndex1, s2RespResult.cutEdgeIndex2 }),
+            s2RespResult.weight
+        };
+        return minCut;
     }
 }
