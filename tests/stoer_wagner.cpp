@@ -4,7 +4,7 @@
 #include <list>
 #include <limits>
 
-std::pair<std::vector<VertexID>, EdgeWeight> stoerWagner(const WeightedGraph& graph) {
+Cut stoerWagner(const WeightedGraph& graph) {
     struct Neighbour {
         VertexID neighbour;
         EdgeWeight edgeWeight;

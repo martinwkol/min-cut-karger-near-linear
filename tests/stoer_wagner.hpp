@@ -1,5 +1,6 @@
 #pragma once
 
+#include "types.hpp"
 #include "graph.hpp"
 #include <vector>
 #include <utility>
@@ -9,4 +10,4 @@
  * @param graph the weighted graph whose minimum cut is to be found
  * @return a pair of a vector of vertex indices from one side of the cut and the weight of the cut
 */
-std::pair<std::vector<VertexID>, EdgeWeight> stoerWagner(const WeightedGraph& graph);
+Cut stoerWagner(const WeightedGraph& graph);
