@@ -75,8 +75,8 @@ size_t SegmentTree::minIndex() {
         size_t indexLeftChild = valuesIndex * 2;
         size_t indexRightChild = valuesIndex * 2 + 1;
 
-        updateLazy(valuesIndex, left, middle);
-        updateLazy(valuesIndex, middle + 1, right);
+        updateLazy(indexLeftChild, left, middle);
+        updateLazy(indexRightChild, middle + 1, right);
 
         if (mValues[indexLeftChild] < mValues[indexRightChild]) {
             valuesIndex = indexLeftChild;
