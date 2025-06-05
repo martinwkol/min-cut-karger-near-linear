@@ -19,16 +19,18 @@ target_link_libraries(mincut PRIVATE mincut-lib)
 
 
 # Testing
-option(BUILD_TESTING "Build tests with Catch2" ON)
+option(BUILD_TESTING "Build tests with Catch2" OFF)
 
 if(BUILD_TESTING)
   include(FetchContent)
+  set(FETCHCONTENT_BASE_DIR ${PROJECT_SOURCE_DIR}/dep)
   FetchContent_Declare(
     Catch2
     GIT_REPOSITORY https://github.com/catchorg/Catch2.git
     GIT_TAG        v3.4.0
   )
   FetchContent_MakeAvailable(Catch2)
+  list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/extras)
   enable_testing()
   add_subdirectory(tests)
 endif()
