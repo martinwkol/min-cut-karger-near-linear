@@ -15,14 +15,18 @@ TEST_CASE("Find smallest 2-respecting cut", "[2-respecting]") {
         WeightedEdge(2, 4, 1.0),    // 5
     });
 
-    SECTION("Strictly 1-respecting") {
+    SECTION("Strictly 2-respecting #1") {
         RootedSpanningTree rst(graph, { 1, 5, 3, 4 }, 2);
         Cut cut = findSmallest2RespectingCut(rst);
         INFO(cut2string(cut));
-        REQUIRE(cut.weight == 101.0);
+        REQUIRE(cut.weight == 3.0);
+        REQUIRE(cut.vertices.size() == 2);
+        std::sort(cut.vertices.begin(), cut.vertices.end());
+        REQUIRE(cut.vertices[0] == 3);
+        REQUIRE(cut.vertices[1] == 4);
     }
 
-    SECTION("Strictly 2-respecting") {
+    SECTION("Strictly 2-respecting #2") {
         RootedSpanningTree rst(graph, { 0, 1, 2, 3 }, 0);
         Cut cut = findSmallest2RespectingCut(rst);
         REQUIRE(cut.weight == 3.0);
