@@ -1,5 +1,6 @@
 #include <stdexcept>
 #include <algorithm>
+#include <sstream>
 #include "catch2/catch_test_macros.hpp"
 #include "catch2/matchers/catch_matchers_floating_point.hpp"
 #include "graph_generation.hpp"
@@ -8,9 +9,27 @@
 
 using Catch::Matchers::WithinRel;
 
+
+static void printCut(std::ostream& stream, const Cut& cut) {
+    stream << "Weight: " << cut.weight << '\n';
+    stream << "Vertices: ";
+    for (VertexID vertex : cut.vertices) {
+        stream << vertex << ", ";
+    }
+    stream << '\n';
+}
+
 static void compateToSW(const WeightedGraph& graph) {
     Cut stoerWagnerResult = stoerWagner(graph);
     Cut nearLinearResult = findLikelyMinCut(graph, 1.0);
+
+    std::stringstream s;
+    s << "Own:\n";
+    printCut(s, nearLinearResult);
+    s << "Stoer Wagner:\n";
+    printCut(s, stoerWagnerResult);
+    INFO(s.str());
+
     REQUIRE_THAT(nearLinearResult.weight, WithinRel(stoerWagnerResult.weight, 0.1));
 }
 
