@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10.0)
+cmake_minimum_required(VERSION 3.16)
 
 project(mincut LANGUAGES CXX)
 
@@ -12,11 +12,23 @@ set(CMAKE_CXX_FLAGS "-Wall -Wextra")
 set(CMAKE_CXX_FLAGS_DEBUG "-g")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
-enable_testing()
-
 add_subdirectory(src)
-add_subdirectory(tests)
 
 add_executable(mincut src/main.cpp)
 target_link_libraries(mincut PRIVATE mincut-lib)
 
+
+# Testing
+option(BUILD_TESTING "Build tests with Catch2" ON)
+
+if(BUILD_TESTING)
+  include(FetchContent)
+  FetchContent_Declare(
+    Catch2
+    GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+    GIT_TAG        v3.4.0
+  )
+  FetchContent_MakeAvailable(Catch2)
+  enable_testing()
+  add_subdirectory(tests)
+endif()
