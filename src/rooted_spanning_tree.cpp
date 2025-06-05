@@ -220,7 +220,7 @@ std::vector<VertexID> RootedSpanningTree::cutVerticesFromCrossingEdges(const std
         }
 
         const AdjacentVertex& child = children[p.childIndex++];
-        stack.push({ child.vertex, 0, !p.inCut ? isCoossingEdge[child.edgeIndex] : p.inCut });
+        stack.push({ child.vertex, 0, isCoossingEdge[child.edgeIndex] ? !p.inCut : p.inCut });
     }
 
     return cut;
