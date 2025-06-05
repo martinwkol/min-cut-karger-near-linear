@@ -6,29 +6,19 @@
 #include "graph_generation.hpp"
 #include "stoer_wagner.hpp"
 #include "find_mincut.hpp"
+#include "util.hpp"
 
 using Catch::Matchers::WithinRel;
 
-
-static void printCut(std::ostream& stream, const Cut& cut) {
-    stream << "Weight: " << cut.weight << '\n';
-    stream << "Vertices: ";
-    for (VertexID vertex : cut.vertices) {
-        stream << vertex << ", ";
-    }
-    stream << '\n';
-}
 
 static void compateToSW(const WeightedGraph& graph) {
     Cut stoerWagnerResult = stoerWagner(graph);
     Cut nearLinearResult = findLikelyMinCut(graph, 1.0);
 
-    std::stringstream s;
-    s << "Own:\n";
-    printCut(s, nearLinearResult);
-    s << "Stoer Wagner:\n";
-    printCut(s, stoerWagnerResult);
-    INFO(s.str());
+    INFO("Own:\n");
+    INFO(cut2string(nearLinearResult));
+    INFO("Stoer Wagner:\n");
+    INFO(cut2string(stoerWagnerResult));
 
     REQUIRE_THAT(nearLinearResult.weight, WithinRel(stoerWagnerResult.weight, 0.1));
 }
