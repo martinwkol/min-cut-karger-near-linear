@@ -5,6 +5,36 @@
 #include "two_respecting_cuts.hpp"
 #include "util.hpp"
 
+
+static Cut smallest2resp(const RootedSpanningTree& rst) {
+    Cut smallestCut;
+    smallestCut.weight = INFINITE_WEIGHT;
+    // strictly 1-respecting
+    for (size_t edgeIndex : rst.edgeSelection()) {
+        Cut cut = cutFromVertices(
+            rst.graph(), rst.cutVerticesFromCrossingEdges({ edgeIndex })
+        );
+        if (cut.weight < smallestCut.weight) {
+            smallestCut = std::move(cut);
+        }
+    }
+    // strictly 2-respecting
+    for (size_t edgeIndex0 : rst.edgeSelection()) {
+        for (size_t edgeIndex1 : rst.edgeSelection()) {
+            if (edgeIndex0 == edgeIndex1) continue;
+            Cut cut = cutFromVertices(
+                rst.graph(), 
+                rst.cutVerticesFromCrossingEdges({ edgeIndex0, edgeIndex1 })
+            );
+            if (cut.weight < smallestCut.weight) {
+                smallestCut = std::move(cut);
+            }
+        }
+    }
+    return smallestCut;
+}
+
+
 TEST_CASE("Find smallest 2-respecting cut", "[2-respecting]") {
     SECTION("Strictly 1-respecting #1") {
         WeightedGraph graph(7, {
