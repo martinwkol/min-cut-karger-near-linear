@@ -1,6 +1,8 @@
 #include "graph_generation.hpp"
 #include "random.hpp"
 
+#include <vector>
+
 WeightedGraph randomConnectedWeightedGraph(size_t numVertices, size_t numEdges, EdgeWeight minWeight, EdgeWeight maxWeight) {
     std::uniform_int_distribution<int> vertexDistr(0, std::numeric_limits<int>::max());
     std::uniform_real_distribution<double> weightDistr(minWeight, maxWeight);
@@ -25,4 +27,19 @@ WeightedGraph randomConnectedWeightedGraph(size_t numVertices, size_t numEdges, 
     }
 
     return WeightedGraph(numVertices, std::move(edges));
+}
+
+RootedSpanningTree randomSpanningTree(const WeightedGraph& graph) {
+    std::uniform_int_distribution<int> vertexDistr(0, std::numeric_limits<int>::max());
+    std::vector<size_t> edgeSelection;
+    std::vector<VertexID> unused(graph.numVertices());
+    edgeSelection.reserve(graph.numVertices() - 1);
+    std::iota(unused.begin(), unused.end(), 0);
+    while (!unused.empty()) {
+        int index = vertexDistr(randomGenerator) % unused.size();
+        edgeSelection.push_back(unused[index]);
+        unused[index] = unused.back();
+        unused.pop_back();
+    }
+    return RootedSpanningTree(graph, std::move(edgeSelection), 0);
 }
