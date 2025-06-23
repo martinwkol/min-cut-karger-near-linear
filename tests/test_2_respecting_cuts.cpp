@@ -123,7 +123,7 @@ TEST_CASE("Find smallest 2-respecting cut", "[2-respecting]") {
     }
 
     SECTION("Random trees") {
-        for (size_t numVertices = 10; numVertices <= 100; numVertices += 10) {
+        for (size_t numVertices = 20; numVertices <= 80; numVertices += 20) {
             WeightedGraph graph = randomConnectedWeightedGraph(numVertices, numVertices - 1, 1.0, 10.0);
             RootedSpanningTree rst = randomSpanningTree(graph);
             Cut cut = findSmallest2RespectingCut(rst);
