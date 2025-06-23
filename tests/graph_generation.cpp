@@ -32,18 +32,23 @@ WeightedGraph randomConnectedWeightedGraph(size_t numVertices, size_t numEdges, 
 
 RootedSpanningTree randomSpanningTree(const WeightedGraph& graph) {
     std::uniform_int_distribution<int> intDistr(0, std::numeric_limits<int>::max());
+
     std::vector<size_t> edgeSelection;
-    std::vector<size_t> unvisitedEdgeIdxs(graph.numEdges());
-    UnionFind uf(graph.numVertices());
     edgeSelection.reserve(graph.numVertices() - 1);
+
+    std::vector<size_t> unvisitedEdgeIdxs(graph.numEdges());
     std::iota(unvisitedEdgeIdxs.begin(), unvisitedEdgeIdxs.end(), 0);
+
+    UnionFind uf(graph.numVertices());
     while (!unvisitedEdgeIdxs.empty() && edgeSelection.size() < graph.numVertices() - 1) {
         int index = intDistr(randomGenerator) % unvisitedEdgeIdxs.size();
         const Edge& edge = graph.edge(index);
+
         if (uf.find(edge.endpoint(0)) != uf.find(edge.endpoint(1))) {
-            uf.unionSets(edge.endpoint(0), edge.endpoint(1));
             edgeSelection.push_back(index);
+            uf.unionSets(edge.endpoint(0), edge.endpoint(1));
         }
+        
         unvisitedEdgeIdxs[index] = unvisitedEdgeIdxs.back();
         unvisitedEdgeIdxs.pop_back();
     }
