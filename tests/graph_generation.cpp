@@ -42,7 +42,7 @@ RootedSpanningTree randomSpanningTree(const WeightedGraph& graph) {
     UnionFind uf(graph.numVertices());
     while (!unvisitedEdgeIdxs.empty() && edgeSelection.size() < graph.numVertices() - 1) {
         int index = intDistr(randomGenerator) % unvisitedEdgeIdxs.size();
-        const Edge& edge = graph.edge(index);
+        const Edge& edge = graph.edge(unvisitedEdgeIdxs[index]);
 
         if (uf.find(edge.endpoint(0)) != uf.find(edge.endpoint(1))) {
             edgeSelection.push_back(index);
