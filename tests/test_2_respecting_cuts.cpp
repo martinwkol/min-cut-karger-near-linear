@@ -44,14 +44,14 @@ TEST_CASE("Find smallest 2-respecting cut", "[2-respecting]") {
     randomGenerator.seed(123456);
 
     SECTION("Strictly 1-respecting #1") {
-        WeightedGraph graph(7, {
+        WeightedGraph graph(6, {
             WeightedEdge(0, 1, 3.0), // 0
             WeightedEdge(1, 2, 3.0), // 1
             WeightedEdge(2, 3, 3.0), // 2
             WeightedEdge(3, 0, 3.0), // 3
-            WeightedEdge(2, 5, 1.0), // 4
-            WeightedEdge(5, 6, 5.0), // 5
-            WeightedEdge(6, 2, 1.0), // 6
+            WeightedEdge(2, 4, 1.0), // 4
+            WeightedEdge(4, 5, 5.0), // 5
+            WeightedEdge(5, 2, 1.0), // 6
         });
         RootedSpanningTree rst(graph, { 0, 1, 3, 4, 5 }, 0);
         Cut cut = findSmallest2RespectingCut(rst);
@@ -59,8 +59,8 @@ TEST_CASE("Find smallest 2-respecting cut", "[2-respecting]") {
         REQUIRE(cut.weight == 2.0);
         REQUIRE(cut.vertices.size() == 2);
         std::sort(cut.vertices.begin(), cut.vertices.end());
-        REQUIRE(cut.vertices[0] == 5);
-        REQUIRE(cut.vertices[1] == 6);
+        REQUIRE(cut.vertices[0] == 4);
+        REQUIRE(cut.vertices[1] == 5);
     }
 
     SECTION("Strictly 1-respecting #2") {
