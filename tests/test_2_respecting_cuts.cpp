@@ -1,10 +1,15 @@
 #include <algorithm>
 #include "catch2/catch_test_macros.hpp"
+#include "catch2/matchers/catch_matchers_floating_point.hpp"
 #include "graph.hpp"
 #include "rooted_spanning_tree.hpp"
 #include "two_respecting_cuts.hpp"
+#include "graph_generation.hpp"
+#include "random.hpp"
 #include "util.hpp"
 
+
+using Catch::Matchers::WithinRel;
 
 static Cut smallest2resp(const RootedSpanningTree& rst) {
     Cut smallestCut;
@@ -36,6 +41,8 @@ static Cut smallest2resp(const RootedSpanningTree& rst) {
 
 
 TEST_CASE("Find smallest 2-respecting cut", "[2-respecting]") {
+    randomGenerator.seed(123456);
+
     SECTION("Strictly 1-respecting #1") {
         WeightedGraph graph(7, {
             WeightedEdge(0, 1, 3.0), // 0
@@ -113,5 +120,16 @@ TEST_CASE("Find smallest 2-respecting cut", "[2-respecting]") {
         REQUIRE(cut.vertices[0] == 2);
         REQUIRE(cut.vertices[1] == 3);
         REQUIRE(cut.vertices[2] == 4);
+    }
+
+    SECTION("Random trees") {
+        for (size_t numVertices = 10; numVertices <= 100; numVertices += 10) {
+            WeightedGraph graph = randomConnectedWeightedGraph(numVertices, numVertices - 1, 1.0, 10.0);
+            RootedSpanningTree rst = randomSpanningTree(graph);
+            Cut cut = findSmallest2RespectingCut(rst);
+            Cut referenceCut = smallest2resp(rst);
+            INFO(cut2string(cut));
+            REQUIRE_THAT(cut.weight, WithinRel(referenceCut.weight));
+        }
     }
 }
