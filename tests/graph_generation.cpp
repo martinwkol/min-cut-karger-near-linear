@@ -41,15 +41,16 @@ RootedSpanningTree randomSpanningTree(const WeightedGraph& graph) {
 
     UnionFind uf(graph.numVertices());
     while (!unvisitedEdgeIdxs.empty() && edgeSelection.size() < graph.numVertices() - 1) {
-        int index = intDistr(randomGenerator) % unvisitedEdgeIdxs.size();
-        const Edge& edge = graph.edge(unvisitedEdgeIdxs[index]);
+        int ueiIndex = intDistr(randomGenerator) % unvisitedEdgeIdxs.size();
+        int edgeIndex = unvisitedEdgeIdxs[ueiIndex];
+        const Edge& edge = graph.edge(edgeIndex);
 
         if (uf.find(edge.endpoint(0)) != uf.find(edge.endpoint(1))) {
-            edgeSelection.push_back(index);
+            edgeSelection.push_back(edgeIndex);
             uf.unionSets(edge.endpoint(0), edge.endpoint(1));
         }
         
-        unvisitedEdgeIdxs[index] = unvisitedEdgeIdxs.back();
+        unvisitedEdgeIdxs[ueiIndex] = unvisitedEdgeIdxs.back();
         unvisitedEdgeIdxs.pop_back();
     }
     return RootedSpanningTree(graph, std::move(edgeSelection), 0);
