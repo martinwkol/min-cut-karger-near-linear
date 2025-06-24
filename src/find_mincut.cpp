@@ -7,7 +7,7 @@
 static Cut findSmallestCut(const WeightedGraph& graph, const TreePacking& packing) {
     Cut bestCut;
     bestCut.weight = INFINITE_WEIGHT;
-    for (const std::vector<size_t>& edgeSelection : packing.trees()) {
+    for (const std::vector<WeightedGraph::EdgeIndex>& edgeSelection : packing.trees()) {
         RootedSpanningTree rst(graph, edgeSelection, 0);
         Cut smallestCut = findSmallest2RespectingCut(rst);
         if (smallestCut.weight < bestCut.weight) {

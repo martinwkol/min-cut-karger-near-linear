@@ -14,7 +14,7 @@
  *           - the graph is disconnected,
  *           - the bufferSize is too small.
  */
-bool minSpanningTree(size_t* edgeIndicesBuffer, size_t bufferSize, const MultiGraph& graph);
+bool minSpanningTree(MultiGraph::EdgeIndex* edgeIndicesBuffer, size_t bufferSize, const MultiGraph& graph);
 
 /**
  * Compute the minimum spanning tree (MST) using explicit edge weights.
@@ -31,7 +31,7 @@ bool minSpanningTree(size_t* edgeIndicesBuffer, size_t bufferSize, const MultiGr
  *           - bufferSize is too small,
  *           - numWeights does not match the number of edges in the graph.
  */
-bool minSpanningTree(size_t* edgeIndicesBuffer, size_t bufferSize, const MultiGraph& graph, const EdgeWeight* weights, size_t numWeights);
+bool minSpanningTree(MultiGraph::EdgeIndex* edgeIndicesBuffer, size_t bufferSize, const MultiGraph& graph, const EdgeWeight* weights, size_t numWeights);
 
 /**
  * Compute the maximum spanning tree (MaxST) of the graph using edge multiplicities.
@@ -44,7 +44,7 @@ bool minSpanningTree(size_t* edgeIndicesBuffer, size_t bufferSize, const MultiGr
  *           - the graph is disconnected,
  *           - bufferSize is too small.
  */
-bool maxSpanningTree(size_t* edgeIndicesBuffer, size_t bufferSize, const MultiGraph& graph);
+bool maxSpanningTree(MultiGraph::EdgeIndex* edgeIndicesBuffer, size_t bufferSize, const MultiGraph& graph);
 
 /**
  * Compute the maximum spanning tree (MaxST) using explicit edge weights.
@@ -60,6 +60,6 @@ bool maxSpanningTree(size_t* edgeIndicesBuffer, size_t bufferSize, const MultiGr
  *           - bufferSize is too small,
  *           - numWeights does not match the number of edges in the graph.
  */
-bool maxSpanningTree(size_t* edgeIndicesBuffer, size_t bufferSize, const MultiGraph& graph, const EdgeWeight* weights, size_t numWeights);
+bool maxSpanningTree(MultiGraph::EdgeIndex* edgeIndicesBuffer, size_t bufferSize, const MultiGraph& graph, const EdgeWeight* weights, size_t numWeights);
 
 

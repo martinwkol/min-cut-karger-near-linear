@@ -4,6 +4,25 @@
 #include "types.hpp"
 #include "edge.hpp"
 
+
+// MultiGraph and WeightedGraph closely related and converted into each other
+// => use shared index type
+struct GraphEdgeIndex {
+    size_t val;
+
+    GraphEdgeIndex() = default;
+    explicit GraphEdgeIndex(size_t _val) : val(_val) {}
+    
+    bool operator==(const GraphEdgeIndex& index) { return val == index.val; }
+    bool operator!=(const GraphEdgeIndex& index) { return val != index.val; }
+    bool operator<(const GraphEdgeIndex& index) { return val < index.val; }
+    bool operator>(const GraphEdgeIndex& index) { return val > index.val; }
+    bool operator<=(const GraphEdgeIndex& index) { return val <= index.val; }
+    bool operator>=(const GraphEdgeIndex& index) { return val >= index.val; }
+    
+    GraphEdgeIndex operator+(size_t i) { return GraphEdgeIndex(val + i); }
+};
+
 class MultiGraph;
 
 class WeightedGraph {
@@ -12,21 +31,7 @@ private:
     std::vector<WeightedEdge> mEdges;
 
 public:
-    struct EdgeIndex {
-        size_t val;
-
-        EdgeIndex() = default;
-        explicit EdgeIndex(size_t _val) : val(_val) {}
-        
-        bool operator==(const EdgeIndex& index) { return val == index.val; }
-        bool operator!=(const EdgeIndex& index) { return val != index.val; }
-        bool operator<(const EdgeIndex& index) { return val < index.val; }
-        bool operator>(const EdgeIndex& index) { return val > index.val; }
-        bool operator<=(const EdgeIndex& index) { return val <= index.val; }
-        bool operator>=(const EdgeIndex& index) { return val >= index.val; }
-        
-        EdgeIndex operator+(size_t i) { return EdgeIndex(val + i); }
-    };
+    using EdgeIndex = GraphEdgeIndex;
 
     WeightedGraph(size_t numVertices, const WeightedEdge* edges, size_t numEdges);
     WeightedGraph(size_t numVertices, std::vector<WeightedEdge>&& edges);
@@ -49,12 +54,14 @@ private:
     std::vector<MultiEdge> mEdges;
 
 public:
+    using EdgeIndex = GraphEdgeIndex;
+
     MultiGraph(size_t numVertices, const MultiEdge* edges, size_t numEdges);
     MultiGraph(size_t numVertices, std::vector<MultiEdge>&& edges);
 
     size_t numVertices() const { return mNumVertices; }
     size_t numEdges() const { return mEdges.size(); }
-    const MultiEdge& edge(size_t index) const { return mEdges[index]; }
+    const MultiEdge& edge(EdgeIndex index) const { return mEdges[index.val]; }
     const std::vector<MultiEdge>& edges() const { return mEdges; }
 
     size_t numSimpleEdges() const;
