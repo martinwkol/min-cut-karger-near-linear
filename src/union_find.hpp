@@ -25,10 +25,13 @@ public:
     /**
      * Finds the representative of the set containing x
     */
-    dtype find(dtype x) const;
+    dtype find(dtype x);
 
     /**
      * Merges the sets containing x and y respectively
+     * @return 
+     *      true if x and y were from different sets and the sets were unionized
+     *      false if x and y already belong to the same set
     */
-    dtype unionSets(dtype x, dtype y);
+    bool unionSets(dtype x, dtype y);
 };

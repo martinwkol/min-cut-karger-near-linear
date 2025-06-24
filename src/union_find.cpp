@@ -7,20 +7,18 @@ UnionFind::UnionFind(dtype n) : mHeight(n, 0) {
     }
 }
 
-UnionFind::dtype UnionFind::find(dtype x) const {   
-    dtype parent = mParents[x];
-    while (parent != x) {
-        x = parent;
-        parent = mParents[x];
-    }
-    return x;
+UnionFind::dtype UnionFind::find(dtype x) {
+    if (mParents[x] == x) return x;   
+    dtype rep = find(mParents[x]);
+    mParents[x] = rep;
+    return rep;
 }
 
-UnionFind::dtype UnionFind::unionSets(dtype x, dtype y) {
+bool UnionFind::unionSets(dtype x, dtype y) {
     dtype repX = find(x);
     dtype repY = find(y);
 
-    if (repX == repY) return repX;
+    if (repX == repY) return false;
     
     htype hX = mHeight[repX];
     htype hY = mHeight[repY];
@@ -29,15 +27,15 @@ UnionFind::dtype UnionFind::unionSets(dtype x, dtype y) {
 
     if (hX > hY) {
         mParents[repY] = repX;
-        return repX;
+        return true;
     }
 
     if (hX < hY) {
         mParents[repX] = repY;
-        return repY;
+        return true;
     }
 
     mParents[repY] = repX;
     mHeight[repX]++;
-    return repX;
+    return true;
 }

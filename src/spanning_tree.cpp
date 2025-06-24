@@ -33,15 +33,13 @@ static bool spanningTree(size_t* edgeIndicesBuffer, size_t bufferSize, const Mul
     for (size_t index : ordering) {
         const MultiEdge& edge = edges[index];
 
-        if (uf.find(edge.endpoint(0)) != uf.find(edge.endpoint(1))) {
+        if (uf.unionSets(edge.endpoint(0), edge.endpoint(1))) {
             *edgeIndicesBuffer++ = index;
             numSelectedEdges++;
 
             if (numSelectedEdges == graph.numVertices() - 1) {
                 return true;
             }
-
-            uf.unionSets(edge.endpoint(0), edge.endpoint(1));
         }
     }
 

@@ -45,9 +45,8 @@ RootedSpanningTree randomSpanningTree(const WeightedGraph& graph) {
         int edgeIndex = unvisitedEdgeIdxs[ueiIndex];
         const Edge& edge = graph.edge(edgeIndex);
 
-        if (uf.find(edge.endpoint(0)) != uf.find(edge.endpoint(1))) {
+        if (uf.unionSets(edge.endpoint(0), edge.endpoint(1))) {
             edgeSelection.push_back(edgeIndex);
-            uf.unionSets(edge.endpoint(0), edge.endpoint(1));
         }
         
         unvisitedEdgeIdxs[ueiIndex] = unvisitedEdgeIdxs.back();
