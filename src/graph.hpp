@@ -9,7 +9,7 @@
 
 // MultiGraph and WeightedGraph closely related and converted into each other
 // => use shared index type
-DEFINE_EDGE_INDEX_STRUCT(GraphEdgeIndex);
+DEFINE_EDGE_INDEX_CLASS(GraphEdgeIndex);
 
 template <typename _Ty>
 using GraphEdgeVector = EdgeIndexVector<GraphEdgeIndex, _Ty>;

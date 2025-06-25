@@ -8,7 +8,7 @@
 
 class RootedSpanningTree {
 public:
-    DEFINE_EDGE_INDEX_STRUCT(EdgeIndex);
+    DEFINE_EDGE_INDEX_CLASS(EdgeIndex);
 
     struct EdgeInterval {
         EdgeIndex start;
