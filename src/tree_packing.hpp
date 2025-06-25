@@ -5,7 +5,7 @@
 
 class TreePacking {
 private:
-    typedef std::vector<WeightedGraph::EdgeIndex> EdgeSelection;
+    typedef std::vector<GraphEdgeIndex> EdgeSelection;
 
     const MultiGraph& mGraph;
     std::vector<EdgeSelection> mTrees;
