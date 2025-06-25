@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include "graph.hpp"
+#include "edge_index_vector.hpp"
 
 class RootedSpanningTree {
 public:
@@ -30,6 +31,9 @@ public:
         EdgeIndex end;
     };
 
+    template <typename _Ty>
+    using EdgeVector = EdgeIndexVector<EdgeIndex, _Ty>;
+
     // A vertex v is adjacent to w if the graph contains an egde e = { v, w }
     // We can store AdjacentVertex(index_of(e), w)) for v and AdjacentVertex(index_of(e), v)) for w
     struct AdjacentVertex {
@@ -47,16 +51,16 @@ public:
      * @param edgeSelection A vector of indixes of edges. The edge selection must induce a spanning tree.
      * @param root Root of the spanning tree.
      */
-    RootedSpanningTree(const WeightedGraph& graph, const std::vector<WeightedGraph::EdgeIndex>& edgeSelection, VertexID root);
+    RootedSpanningTree(const WeightedGraph& graph, const EdgeVector<WeightedGraph::EdgeIndex>& edgeSelection, VertexID root);
 
     const WeightedGraph& graph() const { return mGraph; }
-    const std::vector<WeightedGraph::EdgeIndex>& edgeSelection() const { return mEdgeSelection; }
+    const EdgeVector<WeightedGraph::EdgeIndex>& edgeSelection() const { return mEdgeSelection; }
     VertexID root() const { return mRoot; }
     size_t numVertices() const { return mGraph.numVertices(); }
     size_t numEdges() const { return mEdgeSelection.size(); }
     const AdjacentVertex& parent(VertexID vertex) const { return mParents[vertex]; }
     const std::vector<AdjacentVertex>& children(VertexID vertex) const { return mChildren[vertex]; }
-    WeightedGraph::EdgeIndex originalEdgeIndex(RootedSpanningTree::EdgeIndex idx) const { return mEdgeSelection[idx.val]; }
+    WeightedGraph::EdgeIndex originalEdgeIndex(RootedSpanningTree::EdgeIndex idx) const { return mEdgeSelection[idx]; }
     const WeightedEdge& edge(RootedSpanningTree::EdgeIndex idx) const { return mGraph.edge(originalEdgeIndex(idx)); }
 
     std::vector<EdgeInterval> findVertex2VertexSubsequences(VertexID vertex1, VertexID vertex2) const;
@@ -68,17 +72,14 @@ public:
 private:
     // mGraph is not necessarily a tree itself. The induced subgraph from mEdgeSelection is.
     const WeightedGraph& mGraph;
-    std::vector<WeightedGraph::EdgeIndex> mEdgeSelection;
+    EdgeVector<WeightedGraph::EdgeIndex> mEdgeSelection;
 
     VertexID mRoot;
     std::vector<AdjacentVertex> mParents;
     std::vector<std::vector<AdjacentVertex>> mChildren;
     std::vector<size_t> mSubtreeSize;
 
-    std::vector<RootedSpanningTree::EdgeIndex> mHeavyPathStart;
-
-    RootedSpanningTree::EdgeIndex& heavyPathStart(RootedSpanningTree::EdgeIndex idx);
-    RootedSpanningTree::EdgeIndex heavyPathStart(RootedSpanningTree::EdgeIndex idx) const;
+    EdgeVector<RootedSpanningTree::EdgeIndex> mHeavyPathStart;
     
     void initParentsChildren();
     void heavyLightDecomposition();
