@@ -3,6 +3,7 @@
 #include <vector>
 #include "types.hpp"
 #include "edge.hpp"
+#include "edge_index_vector.hpp"
 
 
 // MultiGraph and WeightedGraph closely related and converted into each other
@@ -26,23 +27,26 @@ struct GraphEdgeIndex {
     GraphEdgeIndex operator++(int) { auto tmp = *this; ++(*this); return tmp; }
 };
 
+template <typename _Ty>
+using GraphEdgeVector = EdgeIndexVector<GraphEdgeIndex, _Ty>;
+
 class MultiGraph;
 
 class WeightedGraph {
 private:
     size_t mNumVertices;
-    std::vector<WeightedEdge> mEdges;
+    GraphEdgeVector<WeightedEdge> mEdges;
 
 public:
     using EdgeIndex = GraphEdgeIndex;
 
     WeightedGraph(size_t numVertices, const WeightedEdge* edges, size_t numEdges);
-    WeightedGraph(size_t numVertices, std::vector<WeightedEdge>&& edges);
+    WeightedGraph(size_t numVertices, GraphEdgeVector<WeightedEdge>&& edges);
 
     size_t numVertices() const { return mNumVertices; }
     size_t numEdges() const { return mEdges.size(); }
-    const WeightedEdge& edge(EdgeIndex index) const { return mEdges[index.val]; }
-    const std::vector<WeightedEdge>& edges() const { return mEdges; }
+    const WeightedEdge& edge(EdgeIndex index) const { return mEdges[index]; }
+    const GraphEdgeVector<WeightedEdge>& edges() const { return mEdges; }
 
     EdgeWeight minEdgeWeight() const;
     EdgeWeight maxEdgeWeight() const;
@@ -54,18 +58,18 @@ public:
 class MultiGraph {
 private:
     size_t mNumVertices;
-    std::vector<MultiEdge> mEdges;
+    GraphEdgeVector<MultiEdge> mEdges;
 
 public:
     using EdgeIndex = GraphEdgeIndex;
 
     MultiGraph(size_t numVertices, const MultiEdge* edges, size_t numEdges);
-    MultiGraph(size_t numVertices, std::vector<MultiEdge>&& edges);
+    MultiGraph(size_t numVertices, GraphEdgeVector<MultiEdge>&& edges);
 
     size_t numVertices() const { return mNumVertices; }
     size_t numEdges() const { return mEdges.size(); }
-    const MultiEdge& edge(EdgeIndex index) const { return mEdges[index.val]; }
-    const std::vector<MultiEdge>& edges() const { return mEdges; }
+    const MultiEdge& edge(EdgeIndex index) const { return mEdges[index]; }
+    const GraphEdgeVector<MultiEdge>& edges() const { return mEdges; }
 
     size_t numSimpleEdges() const;
 
