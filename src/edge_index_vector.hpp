@@ -10,6 +10,9 @@ public:
     typedef typename vector_type::value_type        value_type;
     typedef typename vector_type::reference         reference;
     typedef typename vector_type::const_reference   const_reference;
+    typedef typename vector_type::pointer           pointer;
+    typedef typename vector_type::const_pointer     const_pointer;
+    
     typedef typename vector_type::size_type         size_type;
     typedef typename vector_type::iterator          iterator;
     typedef typename vector_type::const_iterator    const_iterator;
@@ -26,14 +29,19 @@ public:
     reference operator[](edge_index idx)                { return mData[idx.val]; }
     const_reference operator[](edge_index idx) const    { return mData[idx.val]; }
     
-    value_type* data() {
+    reference front()                   { return mData.front(); }
+    const_reference front() const       { return mData.front(); }
+    reference back()                    { return mData.back(); }
+    const_reference back() const        { return mData.back(); }
+
+    pointer data() {
         if constexpr (std::is_same_v<_Ty, bool>) {
             static_assert(!std::is_same_v<_Ty, bool>, "EdgeIndexVector<bool>::data() is unsafe. Use std::vector<char> or std::vector<uint8_t> instead.");
         } else {
             return mData.data(); 
         }
     }
-    const value_type* data() const { 
+    const_pointer data() const { 
         if constexpr (std::is_same_v<_Ty, bool>) {
             static_assert(!std::is_same_v<_Ty, bool>, "EdgeIndexVector<bool>::data() is unsafe. Use std::vector<char> or std::vector<uint8_t> instead.");
         } else {
