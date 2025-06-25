@@ -162,7 +162,7 @@ std::vector<RootedSpanningTree::EdgeInterval> RootedSpanningTree::findVertex2Roo
     return subseq;
 }
 
-RootedSpanningTree::RootedSpanningTree(const WeightedGraph& graph, const EdgeVector<WeightedGraph::EdgeIndex>& edgeSelection, VertexID root) 
+RootedSpanningTree::RootedSpanningTree(const WeightedGraph& graph, const std::vector<WeightedGraph::EdgeIndex>& edgeSelection, VertexID root) 
     : mGraph(graph), mEdgeSelection(edgeSelection), mRoot(root) {
     
     initParentsChildren();

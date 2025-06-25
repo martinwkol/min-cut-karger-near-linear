@@ -51,7 +51,7 @@ public:
      * @param edgeSelection A vector of indixes of edges. The edge selection must induce a spanning tree.
      * @param root Root of the spanning tree.
      */
-    RootedSpanningTree(const WeightedGraph& graph, const EdgeVector<WeightedGraph::EdgeIndex>& edgeSelection, VertexID root);
+    RootedSpanningTree(const WeightedGraph& graph, const std::vector<WeightedGraph::EdgeIndex>& edgeSelection, VertexID root);
 
     const WeightedGraph& graph() const { return mGraph; }
     const EdgeVector<WeightedGraph::EdgeIndex>& edgeSelection() const { return mEdgeSelection; }
