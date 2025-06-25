@@ -8,7 +8,7 @@ WeightedGraph randomConnectedWeightedGraph(size_t numVertices, size_t numEdges, 
     std::uniform_int_distribution<int> vertexDistr(0, std::numeric_limits<int>::max());
     std::uniform_real_distribution<double> weightDistr(minWeight, maxWeight);
 
-    std::vector<WeightedEdge> edges;
+    WeightedGraph::EdgeVector<WeightedEdge> edges;
     edges.reserve(numEdges);
 
     // Ensure that the graph is connected
@@ -33,16 +33,16 @@ WeightedGraph randomConnectedWeightedGraph(size_t numVertices, size_t numEdges, 
 RootedSpanningTree randomSpanningTree(const WeightedGraph& graph) {
     std::uniform_int_distribution<int> intDistr(0, std::numeric_limits<int>::max());
 
-    std::vector<size_t> edgeSelection;
+    std::vector<WeightedGraph::EdgeIndex> edgeSelection;
     edgeSelection.reserve(graph.numVertices() - 1);
 
-    std::vector<size_t> unvisitedEdgeIdxs(graph.numEdges());
+    std::vector<WeightedGraph::EdgeIndex> unvisitedEdgeIdxs(graph.numEdges());
     std::iota(unvisitedEdgeIdxs.begin(), unvisitedEdgeIdxs.end(), 0);
 
     UnionFind uf(graph.numVertices());
     while (!unvisitedEdgeIdxs.empty() && edgeSelection.size() < graph.numVertices() - 1) {
         int ueiIndex = intDistr(randomGenerator) % unvisitedEdgeIdxs.size();
-        int edgeIndex = unvisitedEdgeIdxs[ueiIndex];
+        WeightedGraph::EdgeIndex edgeIndex = unvisitedEdgeIdxs[ueiIndex];
         const Edge& edge = graph.edge(edgeIndex);
 
         if (uf.unionSets(edge.endpoint(0), edge.endpoint(1))) {
