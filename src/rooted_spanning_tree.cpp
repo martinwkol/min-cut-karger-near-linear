@@ -7,8 +7,7 @@
 
 static const RootedSpanningTree::AdjacentVertex NO_PARENT = RootedSpanningTree::AdjacentVertex(RootedSpanningTree::EdgeIndex(size_t(-1)), VertexID(-1));
 
-void RootedSpanningTree::initParentsChildren()
-{
+void RootedSpanningTree::initParentsChildren() {
     mParents.resize(mGraph.numVertices(), NO_PARENT);
     mChildren.resize(mGraph.numVertices());
     mSubtreeSize.resize(mGraph.numVertices(), 1);
