@@ -1,7 +1,6 @@
 #pragma once
 
 #include <vector>
-#include "graph.hpp"
 
 template<typename _EdgeIndexTy, typename _Ty>
 class EdgeIndexVector {
