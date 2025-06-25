@@ -5,43 +5,57 @@
 template<typename _EdgeIndexTy, typename _Ty>
 class EdgeIndexVector {
 public:
-    typedef _EdgeIndexTy edge_index;
-    typedef _Ty value_type;
-    typedef std::vector<value_type> vector_type;
-    typedef typename vector_type::size_type size_type;
-    typedef typename vector_type::iterator iterator;
-    typedef typename vector_type::const_iterator const_iterator;
+    typedef _EdgeIndexTy                            edge_index;
+    typedef std::vector<_Ty>                        vector_type;
+    typedef typename vector_type::value_type        value_type;
+    typedef typename vector_type::reference         reference;
+    typedef typename vector_type::const_reference   const_reference;
+    typedef typename vector_type::size_type         size_type;
+    typedef typename vector_type::iterator          iterator;
+    typedef typename vector_type::const_iterator    const_iterator;
 
     EdgeIndexVector() = default;
-    explicit EdgeIndexVector(const vector_type& vec) : mData(vec) {}
-    explicit EdgeIndexVector(vector_type&& vec) : mData(std::move(vec)) {}
-    explicit EdgeIndexVector(size_type __n) : mData(__n) {}
-    EdgeIndexVector(size_type __n, const value_type& val) : mData(__n, val) {}
-    EdgeIndexVector(std::initializer_list<value_type> l) : mData(l) {}
+    explicit EdgeIndexVector(const vector_type& vec)            : mData(vec) {}
+    explicit EdgeIndexVector(vector_type&& vec)                 : mData(std::move(vec)) {}
+    explicit EdgeIndexVector(size_type __n) : mData(__n)        {}
+    EdgeIndexVector(size_type __n, const value_type& val)       : mData(__n, val) {}
+    EdgeIndexVector(std::initializer_list<value_type> l)        : mData(l) {}
     template <typename _InputIterator>
-    EdgeIndexVector(_InputIterator first, _InputIterator last) : mData(first, last) {}
+    EdgeIndexVector(_InputIterator first, _InputIterator last)  : mData(first, last) {}
 
-    value_type& operator[](edge_index idx) { return mData[idx.val]; }
-    const value_type& operator[](edge_index idx) const { return mData[idx.val]; }
+    reference operator[](edge_index idx)                { return mData[idx.val]; }
+    const_reference operator[](edge_index idx) const    { return mData[idx.val]; }
     
-    value_type* data() { return mData.data(); }
-    const value_type* data() const { return mData.data(); }
-    size_type size() const { return mData.size(); }
+    value_type* data() {
+        if constexpr (std::is_same_v<_Ty, bool>) {
+            static_assert(!std::is_same_v<_Ty, bool>, "EdgeIndexVector<bool>::data() is unsafe. Use std::vector<char> or std::vector<uint8_t> instead.");
+        } else {
+            return mData.data(); 
+        }
+    }
+    const value_type* data() const { 
+        if constexpr (std::is_same_v<_Ty, bool>) {
+            static_assert(!std::is_same_v<_Ty, bool>, "EdgeIndexVector<bool>::data() is unsafe. Use std::vector<char> or std::vector<uint8_t> instead.");
+        } else {
+            return mData.data(); 
+        }
+    }
+    size_type size() const          { return mData.size(); }
 
-    iterator begin() { return mData.begin(); }
-    iterator end() { return mData.end(); }
-    const_iterator begin() const { return mData.begin(); }
-    const_iterator end() const { return mData.end(); }
+    iterator begin()                { return mData.begin(); }
+    iterator end()                  { return mData.end(); }
+    const_iterator begin() const    { return mData.begin(); }
+    const_iterator end() const      { return mData.end(); }
 
-    void push_back(const value_type& val) { mData.push_back(val); }
-    void push_back(value_type&& val) { mData.push_back(std::move(val)); }
+    void push_back(const value_type& val)   { mData.push_back(val); }
+    void push_back(value_type&& val)        { mData.push_back(std::move(val)); }
     template <typename... Args>
-    void emplace_back(Args&&... args) { mData.emplace_back(std::forward<Args>(args)...); }
-    void pop_back() { mData.pop_back(); }   
+    void emplace_back(Args&&... args)       { mData.emplace_back(std::forward<Args>(args)...); }
+    void pop_back()                         { mData.pop_back(); }   
 
-    void reserve(size_type __n) { mData.reserve(__n); }
-    void resize(size_type __n) { mData.resize(__n); }
-    void resize(size_type __n, const value_type& val) { mData.resize(__n, val); }
+    void reserve(size_type __n)                         { mData.reserve(__n); }
+    void resize(size_type __n)                          { mData.resize(__n); }
+    void resize(size_type __n, const value_type& val)   { mData.resize(__n, val); }
     
 
 private:
