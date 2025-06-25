@@ -17,8 +17,9 @@ public:
     EdgeWeight minWeight() const { return mTree.minValue() + mGlobalWeight; }
     size_t minEdgeIndex() { return mTree.minIndex(); }
 
-    void intervalAdd(EdgeWeight weight, const Interval& interval) { mTree.intervalAdd(weight, interval); }
-    void nonIntervalAdd(EdgeWeight weight, const Interval& interval);
-    void pathAdd(EdgeWeight weight, const std::vector<Interval>& pathIntervals);
-    void nonPathAdd(EdgeWeight weight, const std::vector<Interval>& pathIntervals);
+    void intervalAdd(EdgeWeight weight, const RootedSpanningTree::EdgeInterval& interval) 
+        { mTree.intervalAdd(weight, { interval.start.get(), interval.end.get() }); }
+    void nonIntervalAdd(EdgeWeight weight, const RootedSpanningTree::EdgeInterval& interval);
+    void pathAdd(EdgeWeight weight, const std::vector<RootedSpanningTree::EdgeInterval>& pathIntervals);
+    void nonPathAdd(EdgeWeight weight, const std::vector<RootedSpanningTree::EdgeInterval>& pathIntervals);
 };
