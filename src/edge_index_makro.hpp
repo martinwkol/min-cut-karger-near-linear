@@ -23,7 +23,7 @@ public: \
     STRUCT_NAME& operator++() { ++mVal; return *this; }                      \
     STRUCT_NAME operator++(int) { auto tmp = *this; ++(*this); return tmp; }\
     \
-    constexpr size_t get() { return mVal; } \
+    constexpr size_t get() const { return mVal; } \
     \
 private: \
     size_t mVal; \
