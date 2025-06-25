@@ -26,8 +26,8 @@ public:
     template <typename _InputIterator>
     EdgeIndexVector(_InputIterator first, _InputIterator last)  : mData(first, last) {}
 
-    reference operator[](edge_index idx)                { return mData[idx.val]; }
-    const_reference operator[](edge_index idx) const    { return mData[idx.val]; }
+    reference operator[](edge_index idx)                { return mData[idx.get()]; }
+    const_reference operator[](edge_index idx) const    { return mData[idx.get()]; }
     
     reference front()                   { return mData.front(); }
     const_reference front() const       { return mData.front(); }
