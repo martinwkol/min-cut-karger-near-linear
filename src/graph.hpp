@@ -3,29 +3,13 @@
 #include <vector>
 #include "types.hpp"
 #include "edge.hpp"
+#include "edge_index_makro.hpp"
 #include "edge_index_vector.hpp"
 
 
 // MultiGraph and WeightedGraph closely related and converted into each other
 // => use shared index type
-struct GraphEdgeIndex {
-    size_t val;
-
-    GraphEdgeIndex() = default;
-    explicit GraphEdgeIndex(size_t _val) : val(_val) {}
-    
-    bool operator==(const GraphEdgeIndex& index) { return val == index.val; }
-    bool operator!=(const GraphEdgeIndex& index) { return val != index.val; }
-    bool operator<(const GraphEdgeIndex& index) { return val < index.val; }
-    bool operator>(const GraphEdgeIndex& index) { return val > index.val; }
-    bool operator<=(const GraphEdgeIndex& index) { return val <= index.val; }
-    bool operator>=(const GraphEdgeIndex& index) { return val >= index.val; }
-    
-    GraphEdgeIndex operator+(size_t i) { return GraphEdgeIndex(val + i); }
-    GraphEdgeIndex& operator+=(size_t i) { val += i; return *this; }
-    GraphEdgeIndex& operator++() { ++val; return *this; }
-    GraphEdgeIndex operator++(int) { auto tmp = *this; ++(*this); return tmp; }
-};
+DEFINE_EDGE_INDEX_STRUCT(GraphEdgeIndex);
 
 template <typename _Ty>
 using GraphEdgeVector = EdgeIndexVector<GraphEdgeIndex, _Ty>;

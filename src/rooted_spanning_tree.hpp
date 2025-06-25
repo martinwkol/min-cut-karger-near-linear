@@ -3,28 +3,12 @@
 #include <vector>
 #include <string>
 #include "graph.hpp"
+#include "edge_index_makro.hpp"
 #include "edge_index_vector.hpp"
 
 class RootedSpanningTree {
 public:
-    struct EdgeIndex {
-        size_t val;
-
-        EdgeIndex() = default;
-        explicit EdgeIndex(size_t _val) : val(_val) {}
-        
-        bool operator==(const EdgeIndex& index) { return val == index.val; }
-        bool operator!=(const EdgeIndex& index) { return val != index.val; }
-        bool operator<(const EdgeIndex& index) { return val < index.val; }
-        bool operator>(const EdgeIndex& index) { return val > index.val; }
-        bool operator<=(const EdgeIndex& index) { return val <= index.val; }
-        bool operator>=(const EdgeIndex& index) { return val >= index.val; }
-        
-        EdgeIndex operator+(size_t i) { return EdgeIndex(val + i); }
-        EdgeIndex& operator+=(size_t i) { val += i; return *this; }
-        EdgeIndex& operator++() { ++val; return *this; }
-        EdgeIndex operator++(int) { auto tmp = *this; ++(*this); return tmp; }
-    };
+    DEFINE_EDGE_INDEX_STRUCT(EdgeIndex);
 
     struct EdgeInterval {
         EdgeIndex start;
