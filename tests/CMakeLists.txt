@@ -8,6 +8,7 @@ set(TEST_HELPERS
 )
 
 add_executable(tests 
+    test_tree_packing.cpp
     test_2_respecting_cuts.cpp
     test_random_graphs.cpp 
     ${TEST_HELPERS}
