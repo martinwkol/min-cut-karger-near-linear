@@ -157,4 +157,29 @@ TEST_CASE("Find smallest 2-respecting cut", "[2-respecting]") {
             REQUIRE_THAT(cut.weight, WithinRel(referenceCut.weight));
         }
     }
+
+    SECTION("Sparse graphs") {
+        for (size_t numVertices = 20; numVertices <= 80; numVertices += 20) {
+            WeightedGraph graph = randomConnectedWeightedGraph(numVertices, numVertices * 3 / 2, 1.0, 10.0);
+            RootedSpanningTree rst = randomSpanningTree(graph);
+            Cut cut = findSmallest2RespectingCut(rst);
+            Cut referenceCut = smallest2resp(rst);
+            INFO(cut2string(cut));
+            REQUIRE_THAT(cut.weight, WithinRel(referenceCut.weight, 0.0001));
+        }
+    }
+    
+
+    SECTION("Dense graphs") {
+        for (size_t numVertices = 20; numVertices <= 80; numVertices += 20) {
+            WeightedGraph graph = randomConnectedWeightedGraph(numVertices, numVertices * numVertices / 3, 1.0, 10.0);
+            RootedSpanningTree rst = randomSpanningTree(graph);
+            Cut cut = findSmallest2RespectingCut(rst);
+            Cut referenceCut = smallest2resp(rst);
+            INFO(cut2string(cut));
+            REQUIRE_THAT(cut.weight, WithinRel(referenceCut.weight, 0.0001));
+        }
+    }
+
+    
 }
