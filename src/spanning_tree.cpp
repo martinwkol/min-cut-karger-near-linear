@@ -18,8 +18,8 @@ static bool spanningTree(MultiGraph::EdgeIndex* edgeIndicesBuffer, size_t buffer
     }
     if constexpr(USE_WEIGHTS) {
         std::sort(ordering.begin(), ordering.end(), [weights](MultiGraph::EdgeIndex i0, MultiGraph::EdgeIndex i1) {
-            if constexpr(MAX)   return weights[i0.val] > weights[i1.val];
-            else                return weights[i0.val] < weights[i1.val];
+            if constexpr(MAX)   return weights[i0.get()] > weights[i1.get()];
+            else                return weights[i0.get()] < weights[i1.get()];
         });
     } else {
         std::sort(ordering.begin(), ordering.end(), [&graph](MultiGraph::EdgeIndex i0, MultiGraph::EdgeIndex i1) {
