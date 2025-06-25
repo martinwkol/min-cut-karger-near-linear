@@ -20,6 +20,16 @@ Cut cutFromVertices(const WeightedGraph& graph, std::vector<VertexID>&& vertices
     return { std::move(vertices), weight };
 }
 
+std::string graph2string(const WeightedGraph& graph) {
+    std::stringstream s;
+    s << "Num Vertices: " << graph.numVertices() << '\n';
+    s << "Edges:\n";
+    for (const WeightedEdge& edge : graph.edges()) {
+        s << '(' << edge.endpoint(0) << ", " << edge.endpoint(1) << "): " << edge.weight() << '\n';
+    } 
+    return s.str();
+}
+
 std::string cut2string(const Cut& cut) {
     std::stringstream s;
     s << "Weight: " << cut.weight << '\n';
