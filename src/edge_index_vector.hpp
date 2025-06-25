@@ -22,6 +22,8 @@ public:
     value_type& operator[](edge_index idx) { return mData[idx.val]; }
     const value_type& operator[](edge_index idx) const { return mData[idx.val]; }
     
+    value_type* data() { return mData.data(); }
+    const value_type* data() const { return mData.data(); }
     size_type size() const { return mData.size(); }
 
     iterator begin() { return mData.begin(); }
