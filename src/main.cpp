@@ -23,7 +23,7 @@ static ConsoleInput readConsoleInput() {
     std::cin >> d;
     std::cin >> numVertices >> numEdges;
 
-    std::vector<WeightedEdge> edges;
+    WeightedGraph::EdgeVector<WeightedEdge> edges;
     edges.reserve(numEdges);
 
     for (size_t i = 0; i < numEdges; i++) {
