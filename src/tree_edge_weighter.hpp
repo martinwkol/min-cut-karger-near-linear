@@ -15,7 +15,7 @@ public:
 
     size_t numEdges() const { return mTree.listSize(); }
     EdgeWeight minWeight() const { return mTree.minValue() + mGlobalWeight; }
-    size_t minEdgeIndex() { return mTree.minIndex(); }
+    RootedSpanningTree::EdgeIndex minEdgeIndex() { return RootedSpanningTree::EdgeIndex(mTree.minIndex()); }
 
     void intervalAdd(EdgeWeight weight, const RootedSpanningTree::EdgeInterval& interval) 
         { mTree.intervalAdd(weight, { interval.start.get(), interval.end.get() }); }
