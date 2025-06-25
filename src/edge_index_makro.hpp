@@ -1,26 +1,30 @@
 #pragma once
 
 #define DEFINE_EDGE_INDEX_STRUCT(STRUCT_NAME) \
-struct STRUCT_NAME {    \
-    size_t val;         \
-    \
+class STRUCT_NAME {    \
+public: \
     STRUCT_NAME() = default;                            \
-    explicit STRUCT_NAME(size_t _val) : val(_val) {}    \
+    explicit STRUCT_NAME(size_t val) : mVal(val) {}    \
     \
-    bool operator==(const STRUCT_NAME& index) { return val == index.val; }  \
-    bool operator!=(const STRUCT_NAME& index) { return val != index.val; }  \
-    bool operator<(const STRUCT_NAME& index) { return val < index.val; }    \
-    bool operator>(const STRUCT_NAME& index) { return val > index.val; }    \
-    bool operator<=(const STRUCT_NAME& index) { return val <= index.val; }  \
-    bool operator>=(const STRUCT_NAME& index) { return val >= index.val; }  \
+    bool operator==(const STRUCT_NAME& index) { return mVal == index.mVal; }  \
+    bool operator!=(const STRUCT_NAME& index) { return mVal != index.mVal; }  \
+    bool operator<(const STRUCT_NAME& index) { return mVal < index.mVal; }    \
+    bool operator>(const STRUCT_NAME& index) { return mVal > index.mVal; }    \
+    bool operator<=(const STRUCT_NAME& index) { return mVal <= index.mVal; }  \
+    bool operator>=(const STRUCT_NAME& index) { return mVal >= index.mVal; }  \
     \
-    bool operator<(size_t v) { return val < v; }    \
-    bool operator>(size_t v) { return val > v; }    \
-    bool operator<=(size_t v) { return val <= v; }  \
-    bool operator>=(size_t v) { return val >= v; }  \
+    bool operator<(size_t v) { return mVal < v; }    \
+    bool operator>(size_t v) { return mVal > v; }    \
+    bool operator<=(size_t v) { return mVal <= v; }  \
+    bool operator>=(size_t v) { return mVal >= v; }  \
     \
-    STRUCT_NAME operator+(size_t i) const { return STRUCT_NAME(val + i); }  \
-    STRUCT_NAME& operator+=(size_t i) { val += i; return *this; }           \
-    STRUCT_NAME& operator++() { ++val; return *this; }                      \
+    STRUCT_NAME operator+(size_t i) const { return STRUCT_NAME(mVal + i); }  \
+    STRUCT_NAME& operator+=(size_t i) { mVal += i; return *this; }           \
+    STRUCT_NAME& operator++() { ++mVal; return *this; }                      \
     STRUCT_NAME operator++(int) { auto tmp = *this; ++(*this); return tmp; }\
+    \
+    constexpr size_t get() { return mVal; } \
+    \
+private: \
+    size_t mVal; \
 }
