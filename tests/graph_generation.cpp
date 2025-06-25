@@ -37,7 +37,9 @@ RootedSpanningTree randomSpanningTree(const WeightedGraph& graph) {
     edgeSelection.reserve(graph.numVertices() - 1);
 
     std::vector<WeightedGraph::EdgeIndex> unvisitedEdgeIdxs(graph.numEdges());
-    std::iota(unvisitedEdgeIdxs.begin(), unvisitedEdgeIdxs.end(), 0);
+    for (size_t i = 0; i < unvisitedEdgeIdxs.size(); ++i) {
+        unvisitedEdgeIdxs[i] = WeightedGraph::EdgeIndex(i);
+    }
 
     UnionFind uf(graph.numVertices());
     while (!unvisitedEdgeIdxs.empty() && edgeSelection.size() < graph.numVertices() - 1) {
