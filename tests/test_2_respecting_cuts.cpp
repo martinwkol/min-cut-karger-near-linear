@@ -53,7 +53,13 @@ TEST_CASE("Find smallest 2-respecting cut", "[2-respecting]") {
             WeightedEdge(4, 5, 5.0), // 5
             WeightedEdge(5, 2, 1.0), // 6
         });
-        RootedSpanningTree rst(graph, { 0, 1, 3, 4, 5 }, 0);
+        RootedSpanningTree rst(graph, { 
+            WeightedGraph::EdgeIndex(0), 
+            WeightedGraph::EdgeIndex(1), 
+            WeightedGraph::EdgeIndex(3), 
+            WeightedGraph::EdgeIndex(4), 
+            WeightedGraph::EdgeIndex(5) 
+        }, 0);
         Cut cut = findSmallest2RespectingCut(rst);
         INFO(cut2string(cut));
         REQUIRE(cut.weight == 2.0);
@@ -73,7 +79,15 @@ TEST_CASE("Find smallest 2-respecting cut", "[2-respecting]") {
             WeightedEdge(2, 6, 5.0), // 5
             WeightedEdge(2, 7, 1.0), // 6
         });
-        RootedSpanningTree rst(graph, { 0, 1, 2, 3, 4, 5, 6 }, 0);
+        RootedSpanningTree rst(graph, { 
+            WeightedGraph::EdgeIndex(0), 
+            WeightedGraph::EdgeIndex(1), 
+            WeightedGraph::EdgeIndex(2), 
+            WeightedGraph::EdgeIndex(3), 
+            WeightedGraph::EdgeIndex(4), 
+            WeightedGraph::EdgeIndex(5), 
+            WeightedGraph::EdgeIndex(6) 
+        }, 0);
         Cut cut = findSmallest2RespectingCut(rst);
         INFO(cut2string(cut));
         REQUIRE(cut.weight == 0.5);
@@ -93,7 +107,12 @@ TEST_CASE("Find smallest 2-respecting cut", "[2-respecting]") {
             WeightedEdge(3, 4, 3.0),        // 4
             WeightedEdge(2, 4, 1.0),        // 5
         });
-        RootedSpanningTree rst(graph, { 1, 5, 3, 4 }, 2);
+        RootedSpanningTree rst(graph, { 
+            WeightedGraph::EdgeIndex(1), 
+            WeightedGraph::EdgeIndex(5), 
+            WeightedGraph::EdgeIndex(3), 
+            WeightedGraph::EdgeIndex(4) 
+        }, 2);
         Cut cut = findSmallest2RespectingCut(rst);
         INFO(cut2string(cut));
         REQUIRE(cut.weight == 3.0);
@@ -112,7 +131,13 @@ TEST_CASE("Find smallest 2-respecting cut", "[2-respecting]") {
             WeightedEdge(4, 5, 1.0), // 4
             WeightedEdge(5, 0, 2.0), // 5
         });
-        RootedSpanningTree rst(graph, { 0, 1, 3, 4, 5 }, 0);
+        RootedSpanningTree rst(graph, { 
+            WeightedGraph::EdgeIndex(0), 
+            WeightedGraph::EdgeIndex(1), 
+            WeightedGraph::EdgeIndex(3), 
+            WeightedGraph::EdgeIndex(4), 
+            WeightedGraph::EdgeIndex(5)
+        }, 0);
         Cut cut = findSmallest2RespectingCut(rst);
         REQUIRE(cut.weight == 2.0);
         REQUIRE(cut.vertices.size() == 3);
