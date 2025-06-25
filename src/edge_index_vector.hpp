@@ -13,7 +13,9 @@ public:
     typedef typename vector_type::const_iterator const_iterator;
 
     EdgeIndexVector() = default;
-    EdgeIndexVector(size_type __n) : mData(__n) {}
+    explicit EdgeIndexVector(const vector_type& vec) : mData(vec) {}
+    explicit EdgeIndexVector(vector_type&& vec) : mData(std::move(vec)) {}
+    explicit EdgeIndexVector(size_type __n) : mData(__n) {}
     EdgeIndexVector(size_type __n, const value_type& val) : mData(__n, val) {}
     EdgeIndexVector(std::initializer_list<value_type> l) : mData(l) {}
     template <typename _InputIterator>
