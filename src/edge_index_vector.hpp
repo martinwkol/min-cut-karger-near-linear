@@ -12,6 +12,9 @@ public:
     EdgeIndexVector() = default;
     EdgeIndexVector(vector_type::size_type size) : mData(size) {}
     EdgeIndexVector(vector_type::size_type size, const value_type& val) : mData(size, val) {}
+    EdgeIndexVector(std::initializer_list<value_type> l) : mData(l) {}
+    template <typename _InputIterator>
+    EdgeIndexVector(_InputIterator first, _InputIterator last) : mData(first, last) {}
 
     value_type& operator[](edge_index idx) { return mData[idx.val]; }
     const value_type& operator[](edge_index idx) const { return mData[idx.val]; }
