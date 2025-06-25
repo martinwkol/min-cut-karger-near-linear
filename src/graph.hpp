@@ -33,43 +33,43 @@ using GraphEdgeVector = EdgeIndexVector<GraphEdgeIndex, _Ty>;
 class MultiGraph;
 
 class WeightedGraph {
-private:
-    size_t mNumVertices;
-    GraphEdgeVector<WeightedEdge> mEdges;
-
 public:
     using EdgeIndex = GraphEdgeIndex;
+    template <typename _Ty>
+    using EdgeVector = GraphEdgeVector<_Ty>;
 
     WeightedGraph(size_t numVertices, const WeightedEdge* edges, size_t numEdges);
-    WeightedGraph(size_t numVertices, GraphEdgeVector<WeightedEdge>&& edges);
+    WeightedGraph(size_t numVertices, EdgeVector<WeightedEdge>&& edges);
 
     size_t numVertices() const { return mNumVertices; }
     size_t numEdges() const { return mEdges.size(); }
     const WeightedEdge& edge(EdgeIndex index) const { return mEdges[index]; }
-    const GraphEdgeVector<WeightedEdge>& edges() const { return mEdges; }
+    const EdgeVector<WeightedEdge>& edges() const { return mEdges; }
 
     EdgeWeight minEdgeWeight() const;
     EdgeWeight maxEdgeWeight() const;
 
     MultiGraph approxAsMultiGraph(double epsilon) const;
+
+private:
+    size_t mNumVertices;
+    EdgeVector<WeightedEdge> mEdges;
 };
 
 
 class MultiGraph {
-private:
-    size_t mNumVertices;
-    GraphEdgeVector<MultiEdge> mEdges;
-
 public:
     using EdgeIndex = GraphEdgeIndex;
+    template <typename _Ty>
+    using EdgeVector = GraphEdgeVector<_Ty>;
 
     MultiGraph(size_t numVertices, const MultiEdge* edges, size_t numEdges);
-    MultiGraph(size_t numVertices, GraphEdgeVector<MultiEdge>&& edges);
+    MultiGraph(size_t numVertices, EdgeVector<MultiEdge>&& edges);
 
     size_t numVertices() const { return mNumVertices; }
     size_t numEdges() const { return mEdges.size(); }
     const MultiEdge& edge(EdgeIndex index) const { return mEdges[index]; }
-    const GraphEdgeVector<MultiEdge>& edges() const { return mEdges; }
+    const EdgeVector<MultiEdge>& edges() const { return mEdges; }
 
     size_t numSimpleEdges() const;
 
@@ -77,4 +77,8 @@ public:
      * Sample each edge with probability sampleProbability and cap the edge-multiplicities to maxEdgeMultiplicity
     */
     void sampleEdges(double sampleProbability, EdgeMultiplicity maxEdgeMultiplicity);
+
+private:
+    size_t mNumVertices;
+    EdgeVector<MultiEdge> mEdges;
 };

@@ -10,7 +10,7 @@ WeightedGraph::WeightedGraph(size_t numVertices, const WeightedEdge* edges, size
 {
 }
 
-WeightedGraph::WeightedGraph(size_t numVertices, GraphEdgeVector<WeightedEdge>&& edges)
+WeightedGraph::WeightedGraph(size_t numVertices, EdgeVector<WeightedEdge>&& edges)
     : mNumVertices(numVertices), mEdges(std::move(edges))
 {
 }
@@ -28,7 +28,7 @@ EdgeWeight WeightedGraph::maxEdgeWeight() const {
 }
 
 MultiGraph WeightedGraph::approxAsMultiGraph(double epsilon) const {
-    GraphEdgeVector<MultiEdge> multiedges;
+    EdgeVector<MultiEdge> multiedges;
     multiedges.reserve(mEdges.size());
 
     EdgeWeight multiplicator = 1 / (minEdgeWeight() * epsilon);
@@ -44,7 +44,7 @@ MultiGraph::MultiGraph(size_t numVertices, const MultiEdge* edges, size_t numEdg
 {
 }
 
-MultiGraph::MultiGraph(size_t numVertices, GraphEdgeVector<MultiEdge>&& edges)
+MultiGraph::MultiGraph(size_t numVertices, EdgeVector<MultiEdge>&& edges)
     : mNumVertices(numVertices), mEdges(std::move(edges))
 {
 }
