@@ -21,6 +21,9 @@ struct GraphEdgeIndex {
     bool operator>=(const GraphEdgeIndex& index) { return val >= index.val; }
     
     GraphEdgeIndex operator+(size_t i) { return GraphEdgeIndex(val + i); }
+    GraphEdgeIndex& operator+=(size_t i) { val += i; return *this; }
+    GraphEdgeIndex& operator++() { ++val; return *this; }
+    GraphEdgeIndex operator++(int) { auto tmp = *this; ++(*this); return tmp; }
 };
 
 class MultiGraph;
