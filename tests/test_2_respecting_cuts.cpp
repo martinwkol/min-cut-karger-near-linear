@@ -15,21 +15,21 @@ static Cut smallest2resp(const RootedSpanningTree& rst) {
     Cut smallestCut;
     smallestCut.weight = INFINITE_WEIGHT;
     // strictly 1-respecting
-    for (size_t edgeIndex : rst.edgeSelection()) {
+    for (RootedSpanningTree::EdgeIndex i(0); i < rst.numEdges(); ++i) {
         Cut cut = cutFromVertices(
-            rst.graph(), rst.cutVerticesFromCrossingEdges({ edgeIndex })
+            rst.graph(), rst.cutVerticesFromCrossingEdges({ i })
         );
         if (cut.weight < smallestCut.weight) {
             smallestCut = std::move(cut);
         }
     }
     // strictly 2-respecting
-    for (size_t edgeIndex0 : rst.edgeSelection()) {
-        for (size_t edgeIndex1 : rst.edgeSelection()) {
-            if (edgeIndex0 == edgeIndex1) continue;
+    for (RootedSpanningTree::EdgeIndex i(0); i < rst.numEdges(); ++i) {
+        for (RootedSpanningTree::EdgeIndex j(0); j < rst.numEdges(); ++j) {
+            if (i == j) continue;
             Cut cut = cutFromVertices(
                 rst.graph(), 
-                rst.cutVerticesFromCrossingEdges({ edgeIndex0, edgeIndex1 })
+                rst.cutVerticesFromCrossingEdges({ i, j })
             );
             if (cut.weight < smallestCut.weight) {
                 smallestCut = std::move(cut);
