@@ -13,3 +13,14 @@ add_library(mincut-lib
 )
 
 target_include_directories(mincut-lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+
+target_compile_options(mincut-lib PRIVATE
+  -Wall -Wextra
+  "$<$<CONFIG:Debug>:-g>"
+  "$<$<CONFIG:Asan>:-O1;-g;-fsanitize=address;-fno-omit-frame-pointer>"
+  "$<$<CONFIG:Release>:-O3;-DNDEBUG>"
+)
+
+target_link_options(mincut-lib PRIVATE
+  "$<$<CONFIG:Asan>:-fsanitize=address>"
+)

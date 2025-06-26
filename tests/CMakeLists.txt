@@ -14,6 +14,19 @@ add_executable(tests
     ${TEST_HELPERS}
 )
 target_include_directories(tests PRIVATE ${CMAKE_SRC_DIR}/src)
+
 target_link_libraries(tests PRIVATE mincut-lib)
 target_link_libraries(tests PRIVATE Catch2::Catch2WithMain)
+
+target_compile_options(tests PRIVATE
+  -Wall -Wextra
+  "$<$<CONFIG:Debug>:-g>"
+  "$<$<CONFIG:Asan>:-O1;-g;-fsanitize=address;-fno-omit-frame-pointer>"
+  "$<$<CONFIG:Release>:-O3;-DNDEBUG>"
+)
+
+target_link_options(tests PRIVATE
+  "$<$<CONFIG:Asan>:-fsanitize=address>"
+)
+
 catch_discover_tests(tests)
