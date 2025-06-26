@@ -9,6 +9,7 @@ set(TEST_HELPERS
 
 add_executable(tests 
     test_tree_packing.cpp
+    test_two_respecting_trees.cpp
     test_2_respecting_cuts.cpp
     test_find_mincut.cpp 
     ${TEST_HELPERS}
