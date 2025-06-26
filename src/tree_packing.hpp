@@ -4,15 +4,9 @@
 #include "graph.hpp"
 
 class TreePacking {
-private:
+public:
     typedef std::vector<GraphEdgeIndex> EdgeSelection;
 
-    const MultiGraph& mGraph;
-    std::vector<EdgeSelection> mTrees;
-    double mTreeWeight;
-    double mEpsilon;
-
-public:
     /**
      * Compute a tree packing of the given graph with weight at least (1 - epsilon) times the weight of the largest tree packing.
     */
@@ -28,4 +22,10 @@ public:
      * Reduce size of packing to targetSize by randomly sampling trees
     */
     void sampleTrees(size_t targetSize);
+
+private:
+    const MultiGraph& mGraph;
+    std::vector<EdgeSelection> mTrees;
+    double mTreeWeight;
+    double mEpsilon;
 };

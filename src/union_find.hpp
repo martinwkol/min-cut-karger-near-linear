@@ -10,13 +10,6 @@ class UnionFind {
 public:
     typedef VertexID dtype;
 
-private:
-    typedef unsigned char htype;
-
-    std::vector<dtype> mParents;
-    std::vector<htype> mHeight;
-
-public:
     /**
      * Cunstructs Union-Find datastructure on the set { 0, ..., n - 1 }
     */
@@ -34,4 +27,10 @@ public:
      *      false if x and y already belong to the same set
     */
     bool unionSets(dtype x, dtype y);
+
+private:
+    typedef unsigned char htype;
+
+    std::vector<dtype> mParents;
+    std::vector<htype> mHeight;
 };

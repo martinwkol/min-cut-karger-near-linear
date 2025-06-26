@@ -6,10 +6,6 @@
 #include "rooted_spanning_tree.hpp"
 
 class TreeEdgeWeighter {
-private:
-    SegmentTree mTree;
-    EdgeWeight mGlobalWeight;
-
 public:
     explicit TreeEdgeWeighter(size_t numEdges) : mTree(numEdges), mGlobalWeight(0) {}
 
@@ -22,4 +18,8 @@ public:
     void nonIntervalAdd(EdgeWeight weight, const RootedSpanningTree::EdgeInterval& interval);
     void pathAdd(EdgeWeight weight, const std::vector<RootedSpanningTree::EdgeInterval>& pathIntervals);
     void nonPathAdd(EdgeWeight weight, const std::vector<RootedSpanningTree::EdgeInterval>& pathIntervals);
+
+private:
+    SegmentTree mTree;
+    EdgeWeight mGlobalWeight;
 };

@@ -63,8 +63,7 @@ public:
 
     void reserve(size_type __n)                         { mData.reserve(__n); }
     void resize(size_type __n)                          { mData.resize(__n); }
-    void resize(size_type __n, const value_type& val)   { mData.resize(__n, val); }
-    
+    void resize(size_type __n, const value_type& val)   { mData.resize(__n, val); }  
 
 private:
     vector_type mData;
