@@ -1,8 +1,11 @@
 #include "util.hpp"
 #include "types.hpp"
 #include "graph.hpp"
+#include "catch2/catch_test_macros.hpp"
+#include "catch2/matchers/catch_matchers_floating_point.hpp"
 #include <sstream>
 #include <vector>
+#include <cassert>
 
 Cut cutFromVertices(const WeightedGraph& graph, std::vector<VertexID>&& vertices) {
     EdgeWeight weight = 0.0;
@@ -18,6 +21,22 @@ Cut cutFromVertices(const WeightedGraph& graph, std::vector<VertexID>&& vertices
         }
     }
     return { std::move(vertices), weight };
+}
+
+void requireEqual(const Cut& testResult, const Cut& referenceCut, size_t numVertices) {
+    assert(numVertices > 0);
+    INFO(cut2string(testResult));
+    REQUIRE_THAT(testResult.weight, Catch::Matchers::WithinRel(referenceCut.weight, 0.0001));
+    std::vector<bool> inC1(numVertices, false);
+    std::vector<bool> inC2(numVertices, false);
+    for (VertexID vertex : testResult.vertices) inC1[vertex] = true;
+    for (VertexID vertex : referenceCut.vertices) inC2[vertex] = true;
+    bool sameSide = (inC1[0] && inC2[0]) || (!inC1[0] && !inC2[0]);
+    for (VertexID vertex = 1; vertex < numVertices; ++vertex) {
+        bool eq = (inC1[vertex] && inC2[vertex]) || (!inC1[vertex] && !inC2[vertex]);
+        bool consistent = (sameSide && eq) || (!sameSide && !eq);
+        REQUIRE(consistent);
+    }
 }
 
 std::string graph2string(const WeightedGraph& graph) {
