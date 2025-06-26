@@ -12,6 +12,7 @@ static void searchTwoRespectingTree(const WeightedGraph& graph, const TreePackin
         inCut[vertex] = true;
     }
     
+    bool twoRespectingTreeFound = false;
     for (const std::vector<WeightedGraph::EdgeIndex>& edgeSelection : packing.trees()) {
         RootedSpanningTree rst(graph, edgeSelection, 0);
         int crossingEdgeCounter = 0;
@@ -24,9 +25,12 @@ static void searchTwoRespectingTree(const WeightedGraph& graph, const TreePackin
             ) crossingEdgeCounter++;
             if (crossingEdgeCounter >= 3) break;
         }
-        if (crossingEdgeCounter <= 2) return;
+        if (crossingEdgeCounter <= 2) {
+            twoRespectingTreeFound = true;
+            break;
+        }
     }
-    REQUIRE(false);
+    REQUIRE(twoRespectingTreeFound);
 }
 
 static void check(const WeightedGraph& graph) {
