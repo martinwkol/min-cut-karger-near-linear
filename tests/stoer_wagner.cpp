@@ -33,7 +33,7 @@ Cut stoerWagner(const WeightedGraph& graph) {
     VertexID firstRemainingVertex = 0;
 
     for (size_t numRemainingVertices = graph.numVertices(); numRemainingVertices >= 2; numRemainingVertices--) {
-        if (vertexRemoved[firstRemainingVertex]) firstRemainingVertex++;
+        while (vertexRemoved[firstRemainingVertex]) firstRemainingVertex++;
 
         VertexID s = VertexID(-1);
         VertexID t = firstRemainingVertex;
@@ -44,7 +44,7 @@ Cut stoerWagner(const WeightedGraph& graph) {
 
         for (size_t sizeOfA = 1; sizeOfA < numRemainingVertices; sizeOfA++) {
             VertexID mostConnected = VertexID(-1);
-            EdgeWeight maxConnectionValue = -1.0;
+            EdgeWeight maxConnectionValue = std::numeric_limits<EdgeWeight>::lowest();
             for (VertexID vid = 0; vid < graph.numVertices(); vid++) {
                 if (inA[vid] || vertexRemoved[vid]) continue;
                 if (connections2A[vid] > maxConnectionValue) {
