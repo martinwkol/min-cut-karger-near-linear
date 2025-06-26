@@ -26,63 +26,31 @@ static void compateToSW(const WeightedGraph& graph) {
 
 TEST_CASE("Find minumum cut", "[mincut]" ) {
     SECTION("Simple graph") {
-        WeightedGraph graph(4, {
-            WeightedEdge(0, 1, 2.0),
-            WeightedEdge(0, 2, 3.0),
-            WeightedEdge(1, 3, 1.0),
-            WeightedEdge(2, 3, 4.0),
-        });
-        Cut minCut = findLikelyMinCut(graph, 3.0);
-        requireEqual(minCut, { { 1 }, 3.0 }, graph.numVertices());
+        checkMinCut(
+            TestGraphs::simple, 
+            findLikelyMinCut(TestGraphs::simple.graph, 3.0)
+        );
     }
 
     SECTION("Medium graph") {
-        WeightedGraph graph(6, {
-            WeightedEdge(0, 1, 3.0),
-            WeightedEdge(0, 2, 2.0),
-            WeightedEdge(1, 2, 1.0),
-            WeightedEdge(1, 3, 2.0),
-            WeightedEdge(2, 4, 2.0),
-            WeightedEdge(3, 5, 3.0),
-            WeightedEdge(4, 5, 3.0),
-        });
-        Cut minCut = findLikelyMinCut(graph, 3.0);
-        requireEqual(minCut, { { 0, 1, 2 }, 4.0 }, graph.numVertices());
+        checkMinCut(
+            TestGraphs::medium, 
+            findLikelyMinCut(TestGraphs::medium.graph, 3.0)
+        );
     }
 
     SECTION("Multiple min-cuts") {
-        WeightedGraph graph(4, {
-            WeightedEdge(0, 1, 1.0),
-            WeightedEdge(0, 2, 1.0),
-            WeightedEdge(0, 3, 1.0),
-            WeightedEdge(1, 2, 1.0),
-            WeightedEdge(1, 3, 1.0),
-            WeightedEdge(2, 3, 1.0),
-        });
-        Cut minCut = findLikelyMinCut(graph, 3.0);
-        REQUIRE(minCut.weight == 3.0);
-        bool correctSize = minCut.vertices.size() == 1 || minCut.vertices.size() == 3;
-        REQUIRE(correctSize);
+        checkMinCut(
+            TestGraphs::multipleMinCuts, 
+            findLikelyMinCut(TestGraphs::multipleMinCuts.graph, 3.0)
+        );
     }
 
     SECTION("Dense graph") {
-        WeightedGraph graph(5, {
-            WeightedEdge(0, 1, 4.0),
-            WeightedEdge(0, 2, 1.0),
-            WeightedEdge(0, 3, 6.0),
-            WeightedEdge(0, 4, 9.0),
-
-            WeightedEdge(1, 2, 8.0),
-            WeightedEdge(1, 3, 1.0),
-            WeightedEdge(1, 4, 1.0),
-
-            WeightedEdge(2, 3, 2.0),
-            WeightedEdge(2, 4, 1.0),
-            
-            WeightedEdge(3, 4, 5.0),
-        });
-        Cut minCut = findLikelyMinCut(graph, 3.0);
-        requireEqual(minCut, { { 1, 2 }, 10.0 }, graph.numVertices());
+        checkMinCut(
+            TestGraphs::dense, 
+            findLikelyMinCut(TestGraphs::dense.graph, 3.0)
+        );
     }
 
     SECTION("Random sparse graphs, Weights: [1, 5]") {
