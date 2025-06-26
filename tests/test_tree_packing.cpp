@@ -4,6 +4,7 @@
 #include "random.hpp"
 #include "graph_generation.hpp"
 #include "stoer_wagner.hpp"
+#include "util.hpp"
 
 static WeightedGraph multiAsWeighted(const MultiGraph& multiGraph) {
     WeightedGraph::EdgeVector<WeightedEdge> wEdges;
@@ -32,7 +33,7 @@ static void checkPackingSize(const TreePacking& packing, double epsilon) {
     REQUIRE(packing.packingWeight() >= (1 - epsilon) * minCut.weight / 2);
 }
 
-static void checkFromWeightedGraph(const WeightedGraph& graph, double multApproxEps, double packingEps) {
+static void check(const WeightedGraph& graph, double multApproxEps, double packingEps) {
     MultiGraph multiGraph = graph.approxAsMultiGraph(multApproxEps);
     TreePacking packing(multiGraph, packingEps);
     checkIfValid(packing);
@@ -41,75 +42,49 @@ static void checkFromWeightedGraph(const WeightedGraph& graph, double multApprox
 
 TEST_CASE("Compute Tree packing", "[tree-packing]") {
     randomGenerator.seed(123456);
+    double multApproxEps = 0.01;
+    double packingEps = 1.0 / 5.0;
 
     SECTION("Simple graph") {
-        WeightedGraph graph(4, {
-            WeightedEdge(0, 1, 2.0),
-            WeightedEdge(0, 2, 3.0),
-            WeightedEdge(1, 3, 1.0),
-            WeightedEdge(2, 3, 4.0),
-        });
-        checkFromWeightedGraph(graph, 0.01, 1.0 / 5.0);
+        check(TestGraphs::simple.graph, multApproxEps, packingEps);
     }
 
     SECTION("Medium graph") {
-        WeightedGraph graph(6, {
-            WeightedEdge(0, 1, 3.0),
-            WeightedEdge(0, 2, 2.0),
-            WeightedEdge(1, 2, 1.0),
-            WeightedEdge(1, 3, 2.0),
-            WeightedEdge(2, 4, 2.0),
-            WeightedEdge(3, 5, 3.0),
-            WeightedEdge(4, 5, 3.0),
-        });
-        checkFromWeightedGraph(graph, 0.01, 1.0 / 5.0);
+        check(TestGraphs::medium.graph, multApproxEps, packingEps);
     }
 
     SECTION("Multiple min-cuts") {
-        WeightedGraph graph(4, {
-            WeightedEdge(0, 1, 1.0),
-            WeightedEdge(0, 2, 1.0),
-            WeightedEdge(0, 3, 1.0),
-            WeightedEdge(1, 2, 1.0),
-            WeightedEdge(1, 3, 1.0),
-            WeightedEdge(2, 3, 1.0),
-        });
-        checkFromWeightedGraph(graph, 0.01, 1.0 / 5.0);
+        check(TestGraphs::multipleMinCuts.graph, multApproxEps, packingEps);
     }
 
     SECTION("Dense graph") {
-        WeightedGraph graph(5, {
-            WeightedEdge(0, 1, 4.0),
-            WeightedEdge(0, 2, 1.0),
-            WeightedEdge(0, 3, 6.0),
-            WeightedEdge(0, 4, 9.0),
-
-            WeightedEdge(1, 2, 8.0),
-            WeightedEdge(1, 3, 1.0),
-            WeightedEdge(1, 4, 1.0),
-
-            WeightedEdge(2, 3, 2.0),
-            WeightedEdge(2, 4, 1.0),
-            
-            WeightedEdge(3, 4, 5.0),
-        });
-        checkFromWeightedGraph(graph, 0.01, 1.0 / 5.0);
+        check(TestGraphs::dense.graph, multApproxEps, packingEps);
     }
 
     SECTION("Random sparse graphs, Weights: [1, 5]") {
         for (size_t numVertices = 10; numVertices <= 40; numVertices += 10) {
-            checkFromWeightedGraph(
-                randomConnectedWeightedGraph(numVertices, numVertices * 3 / 2, 1.0, 5.0),
-                0.01, 1.0 / 5.0
+            check(
+                randomConnectedWeightedGraph(
+                    numVertices, 
+                    numVertices * 3 / 2, 
+                    1.0, 
+                    5.0
+                ),
+                multApproxEps, packingEps
             );
         }
     }
 
     SECTION("Random dense graphs, Weights: [1, 5]") {
         for (size_t numVertices = 10; numVertices <= 25; numVertices += 5) {
-            checkFromWeightedGraph(
-                randomConnectedWeightedGraph(numVertices, numVertices * numVertices / 3, 1.0, 5.0),
-                0.01, 1.0 / 5.0
+            check(
+                randomConnectedWeightedGraph(
+                    numVertices, 
+                    numVertices * numVertices / 3, 
+                    1.0, 
+                    5.0
+                ),
+                multApproxEps, packingEps
             );
         }
     }
