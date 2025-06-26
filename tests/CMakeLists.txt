@@ -10,7 +10,7 @@ set(TEST_HELPERS
 add_executable(tests 
     test_tree_packing.cpp
     test_2_respecting_cuts.cpp
-    test_random_graphs.cpp 
+    test_find_mincut.cpp 
     ${TEST_HELPERS}
 )
 target_include_directories(tests PRIVATE ${CMAKE_SRC_DIR}/src)
