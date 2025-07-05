@@ -2,7 +2,7 @@
 
 This repository contains a C++ implementation of a Monte Carlo algorithm for computing a minimum cut of a weighted, undirected graph in near-linear time **O(m log(n)^4)**, where **m** is the number of edges and **n** is the number of vertices.
 
-The algorithm is based on the paper [*"A Simple Algorithm for Minimum Cuts in Near-Linear Time"*](https://arxiv.org/abs/1908.11829) by Nalin Bhardwaj, Antonio Molina Lovett, and Bryce Sandlund (2020), and is further explained in my [**bachelor thesis**](./docs/thesis.pdf) (link to be added).
+The algorithm is based on the paper [*"A Simple Algorithm for Minimum Cuts in Near-Linear Time"*](https://arxiv.org/abs/1908.11829) by Nalin Bhardwaj, Antonio Molina Lovett, and Bryce Sandlund (2020), and is further explained in my [**bachelor thesis**](./docs/thesis.pdf).
 
 ---
 
