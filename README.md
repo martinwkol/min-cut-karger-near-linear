@@ -174,3 +174,10 @@ The `input/` directory includes several examples:
 * `i5.txt`
 
 These demonstrate the required format and can be used for quick testing.
+
+---
+
+## 📖 License
+
+This project is released under the **MIT License**.
+You are free to use, modify, and distribute it as you wish.
