@@ -106,7 +106,7 @@ where `n` is the number of vertices.
 * **numEdges**: Number of edges
 * Each edge line:
 
-  * `endpoint0` and `endpoint1`: Edge endpoints
+  * `endpoint0` and `endpoint1`: Edge endpoints (= Vertex IDs in the range 0..(numVertices - 1))
   * `weight`: Edge weight
 
 ### Output Format
