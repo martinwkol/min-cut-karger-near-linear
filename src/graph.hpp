@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <span>
 #include "types.hpp"
 #include "edge.hpp"
 #include "edge_index_makro.hpp"
@@ -22,7 +23,7 @@ public:
     template <typename _Ty>
     using EdgeVector = GraphEdgeVector<_Ty>;
 
-    WeightedGraph(size_t numVertices, const WeightedEdge* edges, size_t numEdges);
+    WeightedGraph(size_t numVertices, std::span<const WeightedEdge> edges);
     WeightedGraph(size_t numVertices, EdgeVector<WeightedEdge>&& edges);
 
     size_t numVertices() const { return mNumVertices; }
@@ -47,7 +48,7 @@ public:
     template <typename _Ty>
     using EdgeVector = GraphEdgeVector<_Ty>;
 
-    MultiGraph(size_t numVertices, const MultiEdge* edges, size_t numEdges);
+    MultiGraph(size_t numVertices, std::span<const MultiEdge> edges);
     MultiGraph(size_t numVertices, EdgeVector<MultiEdge>&& edges);
 
     size_t numVertices() const { return mNumVertices; }

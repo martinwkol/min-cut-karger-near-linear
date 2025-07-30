@@ -5,8 +5,8 @@
 #include <cmath>
 #include "random.hpp"
 
-WeightedGraph::WeightedGraph(size_t numVertices, const WeightedEdge* edges, size_t numEdges)
-    : mNumVertices(numVertices), mEdges(edges, edges + numEdges)
+WeightedGraph::WeightedGraph(size_t numVertices, std::span<const WeightedEdge> edges)
+    : mNumVertices(numVertices), mEdges(edges.begin(), edges.end())
 {
 }
 
@@ -39,8 +39,8 @@ MultiGraph WeightedGraph::approxAsMultiGraph(double epsilon) const {
     return MultiGraph(mNumVertices, std::move(multiedges));    
 }
 
-MultiGraph::MultiGraph(size_t numVertices, const MultiEdge* edges, size_t numEdges)
-    : mNumVertices(numVertices), mEdges(edges, edges + numEdges)
+MultiGraph::MultiGraph(size_t numVertices, std::span<const MultiEdge> edges)
+    : mNumVertices(numVertices), mEdges(edges.begin(), edges.end())
 {
 }
 
