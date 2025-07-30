@@ -4,40 +4,29 @@
 #include <algorithm>
 #include <numeric>
 #include <stdexcept>
+#include <cassert>
 #include "union_find.hpp"
 
-template <bool MAX, bool USE_WEIGHTS>
-static bool spanningTree(MultiGraph::EdgeIndex* edgeIndicesBuffer, size_t bufferSize, const MultiGraph& graph, const EdgeWeight* weights, size_t numWeights) {
-    if (bufferSize < graph.numVertices() - 1) return false;
-    if (USE_WEIGHTS && graph.numEdges() != numWeights) return false;
+template <typename Compare>
+static bool spanningTreeTemplate(std::span<MultiGraph::EdgeIndex> edgeIndicesBuffer, const MultiGraph& graph, Compare less) {
+    assert(edgeIndicesBuffer.size() >= graph.numVertices() - 1);    
     if (graph.numVertices() <= 1) return true;
 
     std::vector<MultiGraph::EdgeIndex> ordering(graph.numEdges());
-    for (size_t i = 0; i < graph.numEdges(); i++) {
-        ordering[i] = MultiGraph::EdgeIndex(i);
-    }
-    if constexpr(USE_WEIGHTS) {
-        std::sort(ordering.begin(), ordering.end(), [weights](MultiGraph::EdgeIndex i0, MultiGraph::EdgeIndex i1) {
-            if constexpr(MAX)   return weights[i0.get()] > weights[i1.get()];
-            else                return weights[i0.get()] < weights[i1.get()];
-        });
-    } else {
-        std::sort(ordering.begin(), ordering.end(), [&graph](MultiGraph::EdgeIndex i0, MultiGraph::EdgeIndex i1) {
-            if constexpr(MAX)   return graph.edge(i0).multiplicity() > graph.edge(i1).multiplicity();
-            else                return graph.edge(i0).multiplicity() < graph.edge(i1).multiplicity();
-        });
-    }
+    std::iota(ordering.begin(), ordering.end(), MultiGraph::EdgeIndex(0));
+    std::sort(ordering.begin(), ordering.end(), less);
 
     UnionFind uf(graph.numVertices());
-    size_t numSelectedEdges = 0;
+    size_t numSelected = 0;
+    auto outIt = edgeIndicesBuffer.begin();
     for (MultiGraph::EdgeIndex index : ordering) {
         const MultiEdge& edge = graph.edge(index);
 
         if (uf.unionSets(edge.endpoint(0), edge.endpoint(1))) {
-            *edgeIndicesBuffer++ = index;
-            numSelectedEdges++;
+            *outIt++ = index;
+            numSelected++;
 
-            if (numSelectedEdges == graph.numVertices() - 1) {
+            if (numSelected == graph.numVertices() - 1) {
                 return true;
             }
         }
@@ -47,18 +36,45 @@ static bool spanningTree(MultiGraph::EdgeIndex* edgeIndicesBuffer, size_t buffer
 } 
 
 
-bool minSpanningTree(MultiGraph::EdgeIndex* edgeIndicesBuffer, size_t bufferSize, const MultiGraph& graph) {
-    return spanningTree<false, false>(edgeIndicesBuffer, bufferSize, graph, nullptr, 0);
+// Multiplicity-based comparison (increasing/decreasing)
+static auto edgeMultiplicityLess(const MultiGraph& graph) {
+    return [&graph](MultiGraph::EdgeIndex i, MultiGraph::EdgeIndex j) {
+        return graph.edge(i).multiplicity() < graph.edge(j).multiplicity();
+    };
 }
 
-bool minSpanningTree(MultiGraph::EdgeIndex* edgeIndicesBuffer, size_t bufferSize, const MultiGraph& graph, const EdgeWeight* weights, size_t numWeights) {
-    return spanningTree<false, true>(edgeIndicesBuffer, bufferSize, graph, weights, numWeights);
+static auto edgeMultiplicityGreater(const MultiGraph& graph) {
+    return [&graph](MultiGraph::EdgeIndex i, MultiGraph::EdgeIndex j) {
+        return graph.edge(i).multiplicity() > graph.edge(j).multiplicity();
+    };
 }
 
-bool maxSpanningTree(MultiGraph::EdgeIndex* edgeIndicesBuffer, size_t bufferSize, const MultiGraph& graph) {
-    return spanningTree<true, false>(edgeIndicesBuffer, bufferSize, graph, nullptr, 0);
+// Weight-based comparison (increasing/decreasing)
+static auto weightLess(std::span<const EdgeWeight> weights) {
+    return [weights](MultiGraph::EdgeIndex i, MultiGraph::EdgeIndex j) {
+        return weights[i.get()] < weights[j.get()];
+    };
 }
 
-bool maxSpanningTree(MultiGraph::EdgeIndex* edgeIndicesBuffer, size_t bufferSize, const MultiGraph& graph, const EdgeWeight* weights, size_t numWeights) {
-    return spanningTree<true, true>(edgeIndicesBuffer, bufferSize, graph, weights, numWeights);
+static auto weightGreater(std::span<const EdgeWeight> weights) {
+    return [weights](MultiGraph::EdgeIndex i, MultiGraph::EdgeIndex j) {
+        return weights[i.get()] > weights[j.get()];
+    };
+}
+
+
+bool minSpanningTree(std::span<MultiGraph::EdgeIndex> edgeIndicesBuffer, const MultiGraph& graph) {
+    return spanningTreeTemplate(edgeIndicesBuffer, graph, edgeMultiplicityLess(graph));
+}
+
+bool minSpanningTree(std::span<MultiGraph::EdgeIndex> edgeIndicesBuffer, const MultiGraph& graph, std::span<const EdgeWeight> weights) {
+    return spanningTreeTemplate(edgeIndicesBuffer, graph, weightLess(weights));
+}
+
+bool maxSpanningTree(std::span<MultiGraph::EdgeIndex> edgeIndicesBuffer, const MultiGraph& graph) {
+    return spanningTreeTemplate(edgeIndicesBuffer, graph, edgeMultiplicityGreater(graph));
+}
+
+bool maxSpanningTree(std::span<MultiGraph::EdgeIndex> edgeIndicesBuffer, const MultiGraph& graph, std::span<const EdgeWeight> weights) {
+    return spanningTreeTemplate(edgeIndicesBuffer, graph, weightGreater(weights));
 }

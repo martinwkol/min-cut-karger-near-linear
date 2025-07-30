@@ -9,9 +9,7 @@
  *        the MST will be written. The buffer must have space for at least (numVertices - 1) edges.
  * @param graph The input MultiGraph from which the MST will be computed.
  * @return true if the spanning tree was successfully computed.
- *         false if:
- *           - the graph is disconnected,
- *           - size of edgeIndicesBuffer is too small.
+ *         false if the graph is disconnected.
  */
 bool minSpanningTree(std::span<MultiGraph::EdgeIndex> edgeIndicesBuffer, const MultiGraph& graph);
 
@@ -23,10 +21,7 @@ bool minSpanningTree(std::span<MultiGraph::EdgeIndex> edgeIndicesBuffer, const M
  * @param graph The input MultiGraph to process.
  * @param weights Span of edge weights, where weights[i] corresponds to edge i in the graph.
  * @return true if the spanning tree was successfully computed;
- *         false if:
- *           - the graph is disconnected,
- *           - size of edgeIndicesBuffer is too small,
- *           - numWeights does not match the number of edges in the graph.
+ *         false if the graph is disconnected.
  */
 bool minSpanningTree(std::span<MultiGraph::EdgeIndex> edgeIndicesBuffer, const MultiGraph& graph, std::span<const EdgeWeight> weights);
 
@@ -38,9 +33,7 @@ bool minSpanningTree(std::span<MultiGraph::EdgeIndex> edgeIndicesBuffer, const M
  * @param bufferSize Number of entries available in edgeIndicesBuffer. Should be at least (numVertices - 1).
  * @param graph The input MultiGraph to process.
  * @return true if the maximum spanning tree was successfully computed;
- *         false if:
- *           - the graph is disconnected,
- *           - size of edgeIndicesBuffer is too small.
+ *         false if the graph is disconnected.
  */
 bool maxSpanningTree(std::span<MultiGraph::EdgeIndex> edgeIndicesBuffer, const MultiGraph& graph);
 
@@ -52,10 +45,7 @@ bool maxSpanningTree(std::span<MultiGraph::EdgeIndex> edgeIndicesBuffer, const M
  * @param graph The input MultiGraph.
  * @param weights Span of edge weights (type double), where weights[i] corresponds to edge i.
  * @return true if the maximum spanning tree was successfully computed;
- *         false if:
- *           - the graph is disconnected,
- *           - size of edgeIndicesBuffer is too small,
- *           - numWeights does not match the number of edges in the graph.
+ *         false if the graph is disconnected.
  */
 bool maxSpanningTree(std::span<MultiGraph::EdgeIndex> edgeIndicesBuffer, const MultiGraph& graph, std::span<const EdgeWeight> weights);
 
