@@ -28,7 +28,7 @@ bool minSpanningTree(std::span<MultiGraph::EdgeIndex> edgeIndicesBuffer, const M
  *           - size of edgeIndicesBuffer is too small,
  *           - numWeights does not match the number of edges in the graph.
  */
-bool minSpanningTree(std::span<MultiGraph::EdgeIndex> edgeIndicesBuffer, const MultiGraph& graph, std::span<EdgeWeight> weights);
+bool minSpanningTree(std::span<MultiGraph::EdgeIndex> edgeIndicesBuffer, const MultiGraph& graph, std::span<const EdgeWeight> weights);
 
 /**
  * Compute the maximum spanning tree (MaxST) of the graph using edge multiplicities.
@@ -57,6 +57,6 @@ bool maxSpanningTree(std::span<MultiGraph::EdgeIndex> edgeIndicesBuffer, const M
  *           - size of edgeIndicesBuffer is too small,
  *           - numWeights does not match the number of edges in the graph.
  */
-bool maxSpanningTree(std::span<MultiGraph::EdgeIndex> edgeIndicesBuffer, const MultiGraph& graph, std::span<EdgeWeight> weights);
+bool maxSpanningTree(std::span<MultiGraph::EdgeIndex> edgeIndicesBuffer, const MultiGraph& graph, std::span<const EdgeWeight> weights);
 
 
