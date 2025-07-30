@@ -8,7 +8,7 @@
 #include "union_find.hpp"
 
 template <typename Compare>
-static bool spanningTreeTemplate(std::span<MultiGraph::EdgeIndex> edgeIndicesBuffer, const MultiGraph& graph, Compare less) {
+static bool spanningTreeTemplate(std::span<MultiGraph::EdgeIndex> edgeIndicesBuffer, const MultiGraph& graph, Compare&& less) {
     assert(edgeIndicesBuffer.size() >= graph.numVertices() - 1);    
     if (graph.numVertices() <= 1) return true;
 
