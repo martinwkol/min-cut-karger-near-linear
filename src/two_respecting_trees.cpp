@@ -11,7 +11,7 @@
 */
 static EdgeMultiplicity mcwUpperBound(const MultiGraph& graph) {
     std::vector<MultiGraph::EdgeIndex> edgeIndices(graph.numVertices() - 1);
-    maxSpanningTree(edgeIndices.data(), edgeIndices.size(), graph);
+    maxSpanningTree(edgeIndices, graph);
     EdgeMultiplicity maxMultiplicity = 0;
     for (MultiGraph::EdgeIndex index : edgeIndices) {
         EdgeMultiplicity multiplicity = graph.edge(index).multiplicity();

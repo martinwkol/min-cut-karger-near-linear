@@ -14,7 +14,7 @@ TreePacking::TreePacking(const MultiGraph& graph, double epsilon) : mGraph(graph
 
     while(true) {
         std::vector<MultiGraph::EdgeIndex> selection(graph.numVertices() - 1);
-        if (!minSpanningTree(selection.data(), selection.size(), graph, loads.data(), loads.size())) {
+        if (!minSpanningTree(selection, graph, loads)) {
             return;
         }
         for (MultiGraph::EdgeIndex edgeIndex : selection) {
