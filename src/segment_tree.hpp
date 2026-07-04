@@ -10,9 +10,9 @@ public:
     explicit SegmentTree(size_t listSize);
     SegmentTree(const DataType* list, size_t listSize);
 
-    size_t listSize() const { return mListSize; }
-    DataType minValue() const { return mValues[0]; }
-    size_t minIndex();
+    size_t getListSize() const { return mListSize; }
+    DataType getMinValue() const { return mValues[0]; }
+    size_t getMinIndex();
 
     void intervalAdd(DataType value, const Interval& interval);
 

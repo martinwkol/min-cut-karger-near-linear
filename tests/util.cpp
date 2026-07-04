@@ -70,15 +70,15 @@ namespace TestGraphs {
 
 Cut cutFromVertices(const WeightedGraph& graph, std::vector<VertexID>&& vertices) {
     EdgeWeight weight = 0.0;
-    std::vector<bool> inVertices(graph.numVertices(), false);
+    std::vector<bool> inVertices(graph.getNumVertices(), false);
     for (VertexID vertex : vertices) {
         inVertices[vertex] = true;
     }
-    for (const WeightedEdge& edge : graph.edges()) {
+    for (const WeightedEdge& edge : graph.getEdges()) {
         bool e0InVertices = inVertices[edge.endpoint(0)];
         bool e1InVertices = inVertices[edge.endpoint(1)];
         if ((e0InVertices && !e1InVertices) || (!e0InVertices && e1InVertices)) {
-            weight += edge.weight();
+            weight += edge.getWeight();
         }
     }
     return { std::move(vertices), weight };
@@ -106,7 +106,7 @@ void requireEqual(const Cut& testResult, const Cut& referenceCut, size_t numVert
 
 void checkMinCut(const TestGraph& testGraph, const Cut& testResult) {
     if (testGraph.minCutUnique) {
-        requireEqual(testResult, testGraph.minCut, testGraph.graph.numVertices());
+        requireEqual(testResult, testGraph.minCut, testGraph.graph.getNumVertices());
     } else {
         requireSameWeight(testResult, testGraph.minCut);
     }
@@ -115,10 +115,10 @@ void checkMinCut(const TestGraph& testGraph, const Cut& testResult) {
 
 std::string graph2string(const WeightedGraph& graph) {
     std::stringstream s;
-    s << "Num Vertices: " << graph.numVertices() << '\n';
+    s << "Num Vertices: " << graph.getNumVertices() << '\n';
     s << "Edges:\n";
-    for (const WeightedEdge& edge : graph.edges()) {
-        s << '(' << edge.endpoint(0) << ", " << edge.endpoint(1) << "): " << edge.weight() << '\n';
+    for (const WeightedEdge& edge : graph.getEdges()) {
+        s << '(' << edge.endpoint(0) << ", " << edge.endpoint(1) << "): " << edge.getWeight() << '\n';
     } 
     return s.str();
 }

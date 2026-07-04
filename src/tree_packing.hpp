@@ -12,11 +12,11 @@ public:
     */
     TreePacking(const MultiGraph& graph, double epsilon);
 
-    const MultiGraph& graph() const { return mGraph; }
-    const std::vector<EdgeSelection>& trees() const { return mTrees; }
-    double treeWeight() const { return mTreeWeight; }
-    double packingWeight() const { return mTreeWeight * mTrees.size(); }
-    double epsilon() const { return mEpsilon; }
+    const MultiGraph& getGraph() const { return mGraph; }
+    const std::vector<EdgeSelection>& getTrees() const { return mTrees; }
+    double getTreeWeight() const { return mTreeWeight; }
+    double getPackingWeight() const { return mTreeWeight * mTrees.size(); }
+    double getEpsilon() const { return mEpsilon; }
 
     /**
      * Reduce size of packing to targetSize by randomly sampling trees

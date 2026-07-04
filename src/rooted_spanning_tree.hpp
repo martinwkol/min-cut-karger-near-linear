@@ -18,8 +18,8 @@ public:
         EdgeIndex end;
     };
 
-    template <typename Ty>
-    using EdgeVector = CustomIndexVector<EdgeIndex, Ty>;
+    template <typename T>
+    using EdgeVector = CustomIndexVector<EdgeIndex, T>;
 
     // A vertex v is adjacent to w if the graph contains an egde e = { v, w }
     // We can store AdjacentVertex(index_of(e), w)) for v and AdjacentVertex(index_of(e), v)) for w
@@ -40,21 +40,22 @@ public:
      */
     RootedSpanningTree(const WeightedGraph& graph, const std::vector<WeightedGraph::EdgeIndex>& edgeSelection, VertexID root);
 
-    const WeightedGraph& graph() const { return mGraph; }
-    const EdgeVector<WeightedGraph::EdgeIndex>& edgeSelection() const { return mEdgeSelection; }
-    VertexID root() const { return mRoot; }
-    size_t numVertices() const { return mGraph.numVertices(); }
-    size_t numEdges() const { return mEdgeSelection.size(); }
-    const AdjacentVertex& parent(VertexID vertex) const { return mParents[vertex]; }
-    const std::vector<AdjacentVertex>& children(VertexID vertex) const { return mChildren[vertex]; }
-    WeightedGraph::EdgeIndex originalEdgeIndex(RootedSpanningTree::EdgeIndex idx) const { return mEdgeSelection[idx]; }
-    const WeightedEdge& edge(RootedSpanningTree::EdgeIndex idx) const { return mGraph.edge(originalEdgeIndex(idx)); }
+    const WeightedGraph& getGraph() const { return mGraph; }
+    const EdgeVector<WeightedGraph::EdgeIndex>& getEdgeSelection() const { return mEdgeSelection; }
+    VertexID getRoot() const { return mRoot; }
+    size_t getNumVertices() const { return mGraph.getNumVertices(); }
+    size_t getNumEdges() const { return mEdgeSelection.size(); }
+
+    const AdjacentVertex& getParent(VertexID vertex) const { return mParents[vertex]; }
+    const std::vector<AdjacentVertex>& getChildren(VertexID vertex) const { return mChildren[vertex]; }
+    
+    WeightedGraph::EdgeIndex getOriginalEdgeIndex(RootedSpanningTree::EdgeIndex idx) const { return mEdgeSelection[idx]; }
+    const WeightedEdge& getEdge(RootedSpanningTree::EdgeIndex idx) const { return mGraph.getEdge(getOriginalEdgeIndex(idx)); }
 
     std::vector<EdgeInterval> findVertex2VertexSubsequences(VertexID vertex1, VertexID vertex2) const;
     std::vector<VertexID> cutVerticesFromCrossingEdges(const std::vector<RootedSpanningTree::EdgeIndex>& crossingEdgeIndices, bool containsRoot = false) const;
 
     std::string toString() const;
-
 
 private:
     // mGraph is not necessarily a tree itself. The induced subgraph from mEdgeSelection is.

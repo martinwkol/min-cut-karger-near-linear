@@ -10,16 +10,16 @@
  * Returns upper bound for the size of the minimum cut
 */
 static EdgeMultiplicity mcwUpperBound(const MultiGraph& graph) {
-    std::vector<MultiGraph::EdgeIndex> edgeIndices(graph.numVertices() - 1);
+    std::vector<MultiGraph::EdgeIndex> edgeIndices(graph.getNumVertices() - 1);
     maxSpanningTree(edgeIndices, graph);
     EdgeMultiplicity maxMultiplicity = 0;
     for (MultiGraph::EdgeIndex index : edgeIndices) {
-        EdgeMultiplicity multiplicity = graph.edge(index).multiplicity();
+        EdgeMultiplicity multiplicity = graph.getEdge(index).multiplicity();
         if (multiplicity > maxMultiplicity) {
             maxMultiplicity = multiplicity;
         }
     }
-    return maxMultiplicity * graph.numVertices() * graph.numVertices();
+    return maxMultiplicity * graph.getNumVertices() * graph.getNumVertices();
 }
 
 TreePacking findTwoRespectingTrees(const WeightedGraph& graph, double d, double eps1, double eps2, double eps3) {
@@ -37,7 +37,7 @@ TreePacking findTwoRespectingTrees(const WeightedGraph& graph, double d, double 
 
     MultiGraph multiGraphApprox = graph.approxAsMultiGraph(eps1);
     EdgeMultiplicity mcwGuess = mcwUpperBound(multiGraphApprox);
-    double b = (d + 2) * std::log(graph.numVertices()) / (eps2 * eps2);
+    double b = (d + 2) * std::log(graph.getNumVertices()) / (eps2 * eps2);
     EdgeMultiplicity maxEdgeMultiplicity = static_cast<EdgeMultiplicity>(std::ceil(24.0 * (1 + eps2) * b));
     bool lastIteration = false;
 
@@ -50,11 +50,11 @@ TreePacking findTwoRespectingTrees(const WeightedGraph& graph, double d, double 
 
         TreePacking packing(sampled, eps3);
         if (lastIteration || sampleProbability >= 1.0) {
-            packing.sampleTrees(static_cast<size_t>(std::ceil(-d * std::log(graph.numVertices()) / std::log(1 - f))));
+            packing.sampleTrees(static_cast<size_t>(std::ceil(-d * std::log(graph.getNumVertices()) / std::log(1 - f))));
             return packing;
         }
 
-        if (packing.packingWeight() >= 2.0 * b / 3) {
+        if (packing.getPackingWeight() >= 2.0 * b / 3) {
             mcwGuess /= 6.0;
             lastIteration = true;
         } else {

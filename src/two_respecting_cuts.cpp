@@ -21,20 +21,20 @@ static S1RespResult findSmallest1RespectingCut(
     const RootedSpanningTree::EdgeVector<std::vector<WeightedGraph::EdgeIndex>>& S_plus, 
     const RootedSpanningTree::EdgeVector<std::vector<WeightedGraph::EdgeIndex>>& S_minus
 ) {       
-    const WeightedGraph& graph = rst.graph();
+    const WeightedGraph& graph = rst.getGraph();
     EdgeWeight weight = 0;
     for (WeightedGraph::EdgeIndex edgeIndex : S_plus[RootedSpanningTree::EdgeIndex(0)]) {
-        weight += graph.edge(edgeIndex).weight();
+        weight += graph.getEdge(edgeIndex).getWeight();
     }
 
     double minWeight = weight;
     RootedSpanningTree::EdgeIndex rstCrossingEdgeIndex(0);
-    for (RootedSpanningTree::EdgeIndex i(1); i < rst.numEdges(); ++i) {
+    for (RootedSpanningTree::EdgeIndex i(1); i < rst.getNumEdges(); ++i) {
         for (WeightedGraph::EdgeIndex edgeIndex : S_plus[i]) {
-            weight += graph.edge(edgeIndex).weight();
+            weight += graph.getEdge(edgeIndex).getWeight();
         }
         for (WeightedGraph::EdgeIndex edgeIndex : S_minus[i]) {
-            weight -= graph.edge(edgeIndex).weight();
+            weight -= graph.getEdge(edgeIndex).getWeight();
         }
         if (weight < minWeight) {
             minWeight = weight;
@@ -51,46 +51,46 @@ static S2RespResult findSmallestStrictly2RespectingCut(
     const RootedSpanningTree::EdgeVector<std::vector<WeightedGraph::EdgeIndex>>& S_plus, 
     const RootedSpanningTree::EdgeVector<std::vector<WeightedGraph::EdgeIndex>>& S_minus
 ) {
-    const WeightedGraph& graph = rst.graph();
-    TreeEdgeWeighter tew(rst.numEdges());
-    WeightedGraph::EdgeVector<bool> inSPlus0(graph.numEdges(), false);
+    const WeightedGraph& graph = rst.getGraph();
+    TreeEdgeWeighter tew(rst.getNumEdges());
+    WeightedGraph::EdgeVector<bool> inSPlus0(graph.getNumEdges(), false);
     for (WeightedGraph::EdgeIndex edgeIndex : S_plus[RootedSpanningTree::EdgeIndex(0)]) {
-        tew.nonPathAdd(graph.edge(edgeIndex).weight(), subsequences[edgeIndex]);
+        tew.nonPathAdd(graph.getEdge(edgeIndex).getWeight(), subsequences[edgeIndex]);
         inSPlus0[edgeIndex] = true;
     }
-    for (WeightedGraph::EdgeIndex edgeIndex(0); edgeIndex < graph.numEdges(); ++edgeIndex) {
+    for (WeightedGraph::EdgeIndex edgeIndex(0); edgeIndex < graph.getNumEdges(); ++edgeIndex) {
         if (!inSPlus0[edgeIndex]) {
-            tew.pathAdd(graph.edge(edgeIndex).weight(), subsequences[edgeIndex]);
+            tew.pathAdd(graph.getEdge(edgeIndex).getWeight(), subsequences[edgeIndex]);
         }
     }
 
     tew.intervalAdd(std::numeric_limits<double>::max(), 
         { RootedSpanningTree::EdgeIndex(0), RootedSpanningTree::EdgeIndex(0) }
     );
-    double minWeight =  tew.minWeight();
+    double minWeight =  tew.getMinWeight();
     RootedSpanningTree::EdgeIndex rstCrossingEdgeIndex1(0);
-    RootedSpanningTree::EdgeIndex rstCrossingEdgeIndex2 = tew.minEdgeIndex();
+    RootedSpanningTree::EdgeIndex rstCrossingEdgeIndex2 = tew.getMinEdgeIndex();
         tew.intervalAdd(std::numeric_limits<double>::max(), 
         { RootedSpanningTree::EdgeIndex(0), RootedSpanningTree::EdgeIndex(0) }
     );
     
-    for (RootedSpanningTree::EdgeIndex i(1); i < rst.numEdges(); ++i) {
+    for (RootedSpanningTree::EdgeIndex i(1); i < rst.getNumEdges(); ++i) {
         for (WeightedGraph::EdgeIndex edgeIndex : S_plus[i]) {
-            double edgeWeight = graph.edge(edgeIndex).weight();
+            double edgeWeight = graph.getEdge(edgeIndex).getWeight();
             tew.pathAdd(-edgeWeight, subsequences[edgeIndex]);
             tew.nonPathAdd(edgeWeight, subsequences[edgeIndex]);
         }
         for (WeightedGraph::EdgeIndex edgeIndex : S_minus[i]) {
-            double edgeWeight = graph.edge(edgeIndex).weight();
+            double edgeWeight = graph.getEdge(edgeIndex).getWeight();
             tew.pathAdd(edgeWeight, subsequences[edgeIndex]);
             tew.nonPathAdd(-edgeWeight, subsequences[edgeIndex]);
         }
 
         tew.intervalAdd(std::numeric_limits<double>::max(), { i, i });
-        if (tew.minWeight() < minWeight) {
-            minWeight = tew.minWeight();
+        if (tew.getMinWeight() < minWeight) {
+            minWeight = tew.getMinWeight();
             rstCrossingEdgeIndex1 = i;
-            rstCrossingEdgeIndex2 = tew.minEdgeIndex();
+            rstCrossingEdgeIndex2 = tew.getMinEdgeIndex();
         }
         tew.intervalAdd(-std::numeric_limits<double>::max(), { i, i });
     }
@@ -99,14 +99,14 @@ static S2RespResult findSmallestStrictly2RespectingCut(
 }
 
 Cut findSmallest2RespectingCut(const RootedSpanningTree& rst) {
-    const WeightedGraph& graph = rst.graph();
+    const WeightedGraph& graph = rst.getGraph();
 
     WeightedGraph::EdgeVector<std::vector<RootedSpanningTree::EdgeInterval>> subsequences;
-    RootedSpanningTree::EdgeVector<std::vector<WeightedGraph::EdgeIndex>> S_plus(graph.numVertices());
-    RootedSpanningTree::EdgeVector<std::vector<WeightedGraph::EdgeIndex>> S_minus(graph.numVertices());
-    subsequences.reserve(graph.numEdges());
+    RootedSpanningTree::EdgeVector<std::vector<WeightedGraph::EdgeIndex>> S_plus(graph.getNumVertices());
+    RootedSpanningTree::EdgeVector<std::vector<WeightedGraph::EdgeIndex>> S_minus(graph.getNumVertices());
+    subsequences.reserve(graph.getNumEdges());
     
-    const WeightedGraph::EdgeVector<WeightedEdge>& graphEdges = graph.edges();
+    const WeightedGraph::EdgeVector<WeightedEdge>& graphEdges = graph.getEdges();
     for (WeightedGraph::EdgeIndex i(0); i < graphEdges.size(); i++) {
         const WeightedEdge& edge = graphEdges[i];
         subsequences.push_back(rst.findVertex2VertexSubsequences(edge.endpoint(0), edge.endpoint(1)));

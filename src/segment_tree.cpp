@@ -82,7 +82,7 @@ SegmentTree::SegmentTree(const DataType* list, size_t listSize) : mListSize(list
     initTree(list, { 0, listSize - 1 }, 0);
 }
 
-size_t SegmentTree::minIndex() {
+size_t SegmentTree::getMinIndex() {
     Interval interval = { 0, mListSize - 1 };
     size_t valuesIndex = 0;
 

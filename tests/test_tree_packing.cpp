@@ -8,29 +8,29 @@
 
 static WeightedGraph multiAsWeighted(const MultiGraph& multiGraph) {
     WeightedGraph::EdgeVector<WeightedEdge> wEdges;
-    wEdges.reserve(multiGraph.numEdges());
-    for (const MultiEdge& mEdge : multiGraph.edges()) {
+    wEdges.reserve(multiGraph.getNumEdges());
+    for (const MultiEdge& mEdge : multiGraph.getEdges()) {
         wEdges.emplace_back(mEdge.endpoint(0), mEdge.endpoint(1), mEdge.multiplicity());
     }
-    return WeightedGraph(multiGraph.numVertices(), std::move(wEdges));
+    return WeightedGraph(multiGraph.getNumVertices(), std::move(wEdges));
 }
 
 static void checkIfValid(const TreePacking& packing) {
-    MultiGraph::EdgeVector<EdgeWeight> weightOfEdge(packing.graph().numEdges(), 0.0);
-    for (const std::vector<MultiGraph::EdgeIndex>& edgeSelection : packing.trees()) {
+    MultiGraph::EdgeVector<EdgeWeight> weightOfEdge(packing.getGraph().getNumEdges(), 0.0);
+    for (const std::vector<MultiGraph::EdgeIndex>& edgeSelection : packing.getTrees()) {
         for (MultiGraph::EdgeIndex edgeIndex : edgeSelection) {
-            weightOfEdge[edgeIndex] += packing.treeWeight();
+            weightOfEdge[edgeIndex] += packing.getTreeWeight();
         }
     }
-    for (MultiGraph::EdgeIndex edgeIndex(0); edgeIndex < packing.graph().numEdges(); ++edgeIndex) {
-        REQUIRE(weightOfEdge[edgeIndex] <= packing.graph().edge(edgeIndex).multiplicity());
+    for (MultiGraph::EdgeIndex edgeIndex(0); edgeIndex < packing.getGraph().getNumEdges(); ++edgeIndex) {
+        REQUIRE(weightOfEdge[edgeIndex] <= packing.getGraph().getEdge(edgeIndex).multiplicity());
     }
 }
 
 static void checkPackingSize(const TreePacking& packing, double epsilon) {
-    WeightedGraph graph = multiAsWeighted(packing.graph());
+    WeightedGraph graph = multiAsWeighted(packing.getGraph());
     Cut minCut = stoerWagner(graph);
-    REQUIRE(packing.packingWeight() >= (1 - epsilon) * minCut.weight / 2);
+    REQUIRE(packing.getPackingWeight() >= (1 - epsilon) * minCut.weight / 2);
 }
 
 static void check(const WeightedGraph& graph, double multApproxEps, double packingEps) {

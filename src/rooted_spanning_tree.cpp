@@ -8,14 +8,14 @@
 static const RootedSpanningTree::AdjacentVertex NO_PARENT = RootedSpanningTree::AdjacentVertex(RootedSpanningTree::EdgeIndex(size_t(-1)), VertexID(-1));
 
 void RootedSpanningTree::initParentsChildren() {
-    mParents.resize(mGraph.numVertices(), NO_PARENT);
-    mChildren.resize(mGraph.numVertices());
-    mSubtreeSize.resize(mGraph.numVertices(), 1);
+    mParents.resize(mGraph.getNumVertices(), NO_PARENT);
+    mChildren.resize(mGraph.getNumVertices());
+    mSubtreeSize.resize(mGraph.getNumVertices(), 1);
 
-    std::vector<std::vector<AdjacentVertex>> adjacent(mGraph.numVertices());
+    std::vector<std::vector<AdjacentVertex>> adjacent(mGraph.getNumVertices());
     EdgeIndex edgeSelectionSize(mEdgeSelection.size());
     for (EdgeIndex i(0); i < edgeSelectionSize; ++i) {
-        const WeightedEdge& edge = this->edge(i);
+        const WeightedEdge& edge = this->getEdge(i);
         adjacent[edge.endpoint(0)].push_back({ i, edge.endpoint(1) });
         adjacent[edge.endpoint(1)].push_back({ i, edge.endpoint(0) });
     }
@@ -50,7 +50,7 @@ void RootedSpanningTree::initParentsChildren() {
 }
 
 void RootedSpanningTree::heavyLightDecomposition() {
-    if (mGraph.numVertices() <= 1) return;
+    if (mGraph.getNumVertices() <= 1) return;
 
     EdgeVector<WeightedGraph::EdgeIndex> orderedEdgeSelection;
     orderedEdgeSelection.reserve(mEdgeSelection.size());    
@@ -97,7 +97,7 @@ void RootedSpanningTree::heavyLightDecomposition() {
                 AdjacentVertex& heavyChild = children[p.heavyChildIndex];
 
                 // New heavy path starts here
-                WeightedGraph::EdgeIndex originalEdgeIndex = this->originalEdgeIndex(heavyChild.edgeIndex);
+                WeightedGraph::EdgeIndex originalEdgeIndex = this->getOriginalEdgeIndex(heavyChild.edgeIndex);
                 RootedSpanningTree::EdgeIndex orderedEdgeIndex = nextIdx;
                 heavyChild.edgeIndex = orderedEdgeIndex;
                 mParents[heavyChild.vertex].edgeIndex = orderedEdgeIndex;
@@ -126,7 +126,7 @@ void RootedSpanningTree::heavyLightDecomposition() {
 
         // Visit light child
         AdjacentVertex& child = children[p.childIndex];
-        WeightedGraph::EdgeIndex edgeIndexInGraph = originalEdgeIndex(child.edgeIndex);
+        WeightedGraph::EdgeIndex edgeIndexInGraph = getOriginalEdgeIndex(child.edgeIndex);
         child.edgeIndex = nextIdx;
         mParents[child.vertex].edgeIndex = nextIdx;
         currentHeavyPathStart = nextIdx; // light child -> new heavy path
@@ -149,13 +149,13 @@ void RootedSpanningTree::heavyLightDecomposition() {
 
 std::vector<RootedSpanningTree::EdgeInterval> RootedSpanningTree::findVertex2RootSubsequences(VertexID vertex) const {
     std::vector<EdgeInterval> subseq;
-    subseq.reserve(2 * size_t(ceil(log2(mGraph.numVertices()))) + 2);
+    subseq.reserve(2 * size_t(ceil(log2(mGraph.getNumVertices()))) + 2);
     while (vertex != mRoot && subseq.size() < 10) {
         EdgeInterval interval;
         interval.end = mParents[vertex].edgeIndex;
         interval.start = mHeavyPathStart[interval.end];
 
-        const WeightedEdge& startEdge = this->edge(interval.start);
+        const WeightedEdge& startEdge = this->getEdge(interval.start);
         vertex = mParents[startEdge.endpoint(1)].vertex == startEdge.endpoint(0) ? startEdge.endpoint(0) : startEdge.endpoint(1);
         subseq.push_back(interval);
     }
@@ -195,7 +195,7 @@ std::vector<RootedSpanningTree::EdgeInterval> RootedSpanningTree::findVertex2Ver
 }
 
 std::vector<VertexID> RootedSpanningTree::cutVerticesFromCrossingEdges(const std::vector<RootedSpanningTree::EdgeIndex>& crossingEdgeIndices, bool containsRoot) const {
-    EdgeVector<bool> isCoossingEdge(numEdges(), false);
+    EdgeVector<bool> isCoossingEdge(getNumEdges(), false);
     for (EdgeIndex crossingEdgeIndex : crossingEdgeIndices) {
         isCoossingEdge[crossingEdgeIndex] = true;
     }

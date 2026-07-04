@@ -60,18 +60,18 @@ RootedSpanningTree randomSpanningTree(const WeightedGraph& graph) {
     std::uniform_int_distribution<int> intDistr(0, std::numeric_limits<int>::max());
 
     std::vector<WeightedGraph::EdgeIndex> edgeSelection;
-    edgeSelection.reserve(graph.numVertices() - 1);
+    edgeSelection.reserve(graph.getNumVertices() - 1);
 
-    std::vector<WeightedGraph::EdgeIndex> unvisitedEdgeIdxs(graph.numEdges());
+    std::vector<WeightedGraph::EdgeIndex> unvisitedEdgeIdxs(graph.getNumEdges());
     for (size_t i = 0; i < unvisitedEdgeIdxs.size(); ++i) {
         unvisitedEdgeIdxs[i] = WeightedGraph::EdgeIndex(i);
     }
 
-    UnionFind uf(graph.numVertices());
-    while (!unvisitedEdgeIdxs.empty() && edgeSelection.size() < graph.numVertices() - 1) {
+    UnionFind uf(graph.getNumVertices());
+    while (!unvisitedEdgeIdxs.empty() && edgeSelection.size() < graph.getNumVertices() - 1) {
         int ueiIndex = intDistr(randomGenerator) % unvisitedEdgeIdxs.size();
         WeightedGraph::EdgeIndex edgeIndex = unvisitedEdgeIdxs[ueiIndex];
-        const Edge& edge = graph.edge(edgeIndex);
+        const Edge& edge = graph.getEdge(edgeIndex);
 
         if (uf.unionSets(edge.endpoint(0), edge.endpoint(1))) {
             edgeSelection.push_back(edgeIndex);

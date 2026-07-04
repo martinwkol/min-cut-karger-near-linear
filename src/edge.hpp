@@ -20,7 +20,7 @@ class WeightedEdge : public Edge {
 public:
     WeightedEdge(VertexID endpoint0, VertexID endpoint1, EdgeWeight weight) : Edge(endpoint0, endpoint1), mWeight(weight) {}
 
-    EdgeWeight weight() const { return mWeight; }
+    EdgeWeight getWeight() const { return mWeight; }
     void setWeight(EdgeWeight weight) { mWeight = weight; }
     
 private:

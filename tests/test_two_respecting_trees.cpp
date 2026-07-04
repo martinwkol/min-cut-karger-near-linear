@@ -7,17 +7,17 @@
 #include "util.hpp"
 
 static void searchTwoRespectingTree(const WeightedGraph& graph, const TreePacking& packing, const Cut& minCut) {
-    std::vector<bool> inCut(graph.numVertices(), false);
+    std::vector<bool> inCut(graph.getNumVertices(), false);
     for (VertexID vertex : minCut.vertices) {
         inCut[vertex] = true;
     }
     
     bool twoRespectingTreeFound = false;
-    for (const std::vector<WeightedGraph::EdgeIndex>& edgeSelection : packing.trees()) {
+    for (const std::vector<WeightedGraph::EdgeIndex>& edgeSelection : packing.getTrees()) {
         RootedSpanningTree rst(graph, edgeSelection, 0);
         int crossingEdgeCounter = 0;
-        for (RootedSpanningTree::EdgeIndex i(0); i < rst.numEdges(); ++i) {
-            const WeightedEdge& edge = rst.edge(i);
+        for (RootedSpanningTree::EdgeIndex i(0); i < rst.getNumEdges(); ++i) {
+            const WeightedEdge& edge = rst.getEdge(i);
             if (
                 (inCut[edge.endpoint(0)] && !inCut[edge.endpoint(1)])
                 ||

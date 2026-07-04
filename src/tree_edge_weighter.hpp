@@ -9,9 +9,9 @@ class TreeEdgeWeighter {
 public:
     explicit TreeEdgeWeighter(size_t numEdges) : mTree(numEdges), mGlobalWeight(0) {}
 
-    size_t numEdges() const { return mTree.listSize(); }
-    EdgeWeight minWeight() const { return mTree.minValue() + mGlobalWeight; }
-    RootedSpanningTree::EdgeIndex minEdgeIndex() { return RootedSpanningTree::EdgeIndex(mTree.minIndex()); }
+    size_t getNumEdges() const { return mTree.getListSize(); }
+    EdgeWeight getMinWeight() const { return mTree.getMinValue() + mGlobalWeight; }
+    RootedSpanningTree::EdgeIndex getMinEdgeIndex() { return RootedSpanningTree::EdgeIndex(mTree.getMinIndex()); }
 
     void intervalAdd(EdgeWeight weight, const RootedSpanningTree::EdgeInterval& interval) 
         { mTree.intervalAdd(weight, { interval.start.get(), interval.end.get() }); }

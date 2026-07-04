@@ -6,14 +6,14 @@
 
 TreePacking::TreePacking(const MultiGraph& graph, double epsilon) : mGraph(graph) {
     mEpsilon = epsilon;
-    mTreeWeight = epsilon / (std::log(graph.numSimpleEdges()) * 3);
+    mTreeWeight = epsilon / (std::log(graph.getNumSimpleEdges()) * 3);
 
-    size_t numEdges = graph.edges().size();
+    size_t numEdges = graph.getEdges().size();
     GraphEdgeVector<EdgeWeight> loads(numEdges, 0.0);
     GraphEdgeVector<EdgeMultiplicity> simpleEdgeCounters(numEdges, 0);
 
     while(true) {
-        std::vector<MultiGraph::EdgeIndex> selection(graph.numVertices() - 1);
+        std::vector<MultiGraph::EdgeIndex> selection(graph.getNumVertices() - 1);
         if (!minSpanningTree(selection, graph, loads)) {
             return;
         }
@@ -22,7 +22,7 @@ TreePacking::TreePacking(const MultiGraph& graph, double epsilon) : mGraph(graph
                 return;
             }
             simpleEdgeCounters[edgeIndex]++;
-            if (simpleEdgeCounters[edgeIndex] >= graph.edge(edgeIndex).multiplicity()) {
+            if (simpleEdgeCounters[edgeIndex] >= graph.getEdge(edgeIndex).multiplicity()) {
                 simpleEdgeCounters[edgeIndex] = 0;
                 loads[edgeIndex] += mTreeWeight;
             }

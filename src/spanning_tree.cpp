@@ -9,24 +9,24 @@
 
 template <typename Compare>
 static bool spanningTreeTemplate(std::span<MultiGraph::EdgeIndex> edgeIndicesBuffer, const MultiGraph& graph, Compare&& less) {
-    assert(edgeIndicesBuffer.size() >= graph.numVertices() - 1);    
-    if (graph.numVertices() <= 1) return true;
+    assert(edgeIndicesBuffer.size() >= graph.getNumVertices() - 1);    
+    if (graph.getNumVertices() <= 1) return true;
 
-    std::vector<MultiGraph::EdgeIndex> ordering(graph.numEdges());
+    std::vector<MultiGraph::EdgeIndex> ordering(graph.getNumEdges());
     std::iota(ordering.begin(), ordering.end(), MultiGraph::EdgeIndex(0));
     std::sort(ordering.begin(), ordering.end(), less);
 
-    UnionFind uf(graph.numVertices());
+    UnionFind uf(graph.getNumVertices());
     size_t numSelected = 0;
     auto outIt = edgeIndicesBuffer.begin();
     for (MultiGraph::EdgeIndex index : ordering) {
-        const MultiEdge& edge = graph.edge(index);
+        const MultiEdge& edge = graph.getEdge(index);
 
         if (uf.unionSets(edge.endpoint(0), edge.endpoint(1))) {
             *outIt++ = index;
             numSelected++;
 
-            if (numSelected == graph.numVertices() - 1) {
+            if (numSelected == graph.getNumVertices() - 1) {
                 return true;
             }
         }
@@ -39,13 +39,13 @@ static bool spanningTreeTemplate(std::span<MultiGraph::EdgeIndex> edgeIndicesBuf
 // Multiplicity-based comparison (increasing/decreasing)
 static auto edgeMultiplicityLess(const MultiGraph& graph) {
     return [&graph](MultiGraph::EdgeIndex i, MultiGraph::EdgeIndex j) {
-        return graph.edge(i).multiplicity() < graph.edge(j).multiplicity();
+        return graph.getEdge(i).multiplicity() < graph.getEdge(j).multiplicity();
     };
 }
 
 static auto edgeMultiplicityGreater(const MultiGraph& graph) {
     return [&graph](MultiGraph::EdgeIndex i, MultiGraph::EdgeIndex j) {
-        return graph.edge(i).multiplicity() > graph.edge(j).multiplicity();
+        return graph.getEdge(i).multiplicity() > graph.getEdge(j).multiplicity();
     };
 }
 
