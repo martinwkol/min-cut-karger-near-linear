@@ -5,7 +5,7 @@
 #include "types.hpp"
 #include "edge.hpp"
 #include "strong_index.hpp"
-#include "edge_index_vector.hpp"
+#include "custom_index_vector.hpp"
 
 
 // MultiGraph and WeightedGraph closely related and converted into each other
@@ -13,8 +13,8 @@
 struct GraphEdgeIndexTag {};
 using GraphEdgeIndex = StrongIndex<GraphEdgeIndexTag>;
 
-template <typename _Ty>
-using GraphEdgeVector = EdgeIndexVector<GraphEdgeIndex, _Ty>;
+template <typename Ty>
+using GraphEdgeVector = CustomIndexVector<GraphEdgeIndex, Ty>;
 
 class MultiGraph;
 

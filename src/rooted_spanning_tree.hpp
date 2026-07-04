@@ -4,9 +4,7 @@
 #include <string>
 #include "graph.hpp"
 #include "strong_index.hpp"
-#include "edge_index_vector.hpp"
-
-
+#include "custom_index_vector.hpp"
 
 class RootedSpanningTree {
 private:
@@ -20,8 +18,8 @@ public:
         EdgeIndex end;
     };
 
-    template <typename _Ty>
-    using EdgeVector = EdgeIndexVector<EdgeIndex, _Ty>;
+    template <typename Ty>
+    using EdgeVector = CustomIndexVector<EdgeIndex, Ty>;
 
     // A vertex v is adjacent to w if the graph contains an egde e = { v, w }
     // We can store AdjacentVertex(index_of(e), w)) for v and AdjacentVertex(index_of(e), v)) for w
