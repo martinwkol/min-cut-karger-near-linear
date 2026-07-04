@@ -3,9 +3,22 @@
 #include <vector>
 
 template <typename IndexT, typename T>
-class CustomIndexVector : public std::vector<T> {
+class CustomIndexVector : private std::vector<T> {
 public:
     using std::vector<T>::vector;
+
+    using std::vector<T>::push_back;
+    using std::vector<T>::emplace_back;
+    using std::vector<T>::reserve;
+    using std::vector<T>::resize;
+
+    using std::vector<T>::front;
+    using std::vector<T>::back;
+
+    using std::vector<T>::begin;
+    using std::vector<T>::end;
+    using std::vector<T>::size;
+    using std::vector<T>::capacity;
 
     explicit CustomIndexVector(const std::vector<T>& vec) : std::vector<T>(vec) {}
 
