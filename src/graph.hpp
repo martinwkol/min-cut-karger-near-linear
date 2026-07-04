@@ -4,13 +4,14 @@
 #include <span>
 #include "types.hpp"
 #include "edge.hpp"
-#include "edge_index_makro.hpp"
+#include "strong_index.hpp"
 #include "edge_index_vector.hpp"
 
 
 // MultiGraph and WeightedGraph closely related and converted into each other
 // => use shared index type
-DEFINE_EDGE_INDEX_CLASS(GraphEdgeIndex);
+struct GraphEdgeIndexTag {};
+using GraphEdgeIndex = StrongIndex<GraphEdgeIndexTag>;
 
 template <typename _Ty>
 using GraphEdgeVector = EdgeIndexVector<GraphEdgeIndex, _Ty>;

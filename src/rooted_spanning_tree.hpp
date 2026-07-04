@@ -3,12 +3,17 @@
 #include <vector>
 #include <string>
 #include "graph.hpp"
-#include "edge_index_makro.hpp"
+#include "strong_index.hpp"
 #include "edge_index_vector.hpp"
 
+
+
 class RootedSpanningTree {
+private:
+    struct RSTEdgeIndexTag {};
+
 public:
-    DEFINE_EDGE_INDEX_CLASS(EdgeIndex);
+    using EdgeIndex = StrongIndex<RSTEdgeIndexTag>;
 
     struct EdgeInterval {
         EdgeIndex start;
